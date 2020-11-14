@@ -38,7 +38,7 @@ function formatData() {
 			borderWidth: 2,
 			lineTension: 0
 		}]
-	}
+	};
 	let nakazeno;
 
 	for (let i = 0; i < dataLength; i++) {
