@@ -4,9 +4,9 @@ let ctx = canvas.getContext("2d");
 const playSpeed = 250; // ms
 
 const minSizeOfData = 150;
-const startNakazeno = 1;
+const startNakazeno = 3;
 
-const R = 1.5;
+const R = 2.4;
 let smrtnost = 0.012;
 let population = 10690000;
 let pocetIteraciDne = 0;
@@ -37,6 +37,7 @@ function addData(data) {
 	chart.options.scales.yAxes[0].ticks.max = 8000; */
 	chart.update();
 
+	document.getElementById("datum").innerHTML = newDatum;
 	document.getElementById("kumulativniUmrti").innerHTML = kumulativniPocetUmrti;
 	document.getElementById("dnesUmrti").innerHTML = Math.round(noveUmrti[noveUmrti.length - 1]);
 }
@@ -53,7 +54,7 @@ function removeData() {
 
 function initialize() {
 	chartData = {
-		labels: ["2020-01-01"],
+		labels: ["2020-03-01"],
 		datasets: [{
 			label: 'počet nakažených',
 			data: [startNakazeno],
@@ -135,6 +136,7 @@ function initialize() {
 		}
 	});
 
+	document.getElementById("datum").innerHTML = chartData.labels[chartData.labels.length - 1];
 	document.getElementById("kumulativniUmrti").innerHTML = kumulativniPocetUmrti;
 	document.getElementById("dnesUmrti").innerHTML = noveUmrti[noveUmrti.length - 1];
 }
@@ -177,9 +179,9 @@ function calcData() {
 	kumulativniPocetUmrti += Math.round(noveUmrti[noveUmrti.length - 1]);
 
 	realAktualneNakazeno.push(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
-	return Math.round(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
+	return Math.round(realAktualneNakazeno[realAktualneNakazeno.length - 1]);
 }
 
 function nakazitelni(predImunDobou, celkove, L) {
-	return ((L - celkove + predImunDobou) / L);
+	return ((celkove - predImunDobou) < L ? ((L - celkove + predImunDobou) / L) : 0);
 }
