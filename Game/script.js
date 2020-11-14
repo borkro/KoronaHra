@@ -1,22 +1,25 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
-const minSizeOfData = 100;
+const playSpeed = 500; // ms
+
+const minSizeOfData = 150;
 const startNakazeno = 1;
 
-let r = 2.4;
-const R = r;
+const R = 1.5;
 let smrtnost = 0.012;
 let population = 10690000;
 let pocetIteraciDne = 0;
-let noveNakazeno = [];
+let noveNakazenoReal = [];
 let inkubDoba = 5;
 let nemocDoba = 14;
-let imunDoba = 90;
+let imunDoba = 80;
 let kumulativniPocetNakazenych = [];
 let noveUmrti = [];
 let procentoNakazitelnych = 0;
 let kumulativniPocetUmrti = 0;
+let rZaDen = R / inkubDoba;
+let realAktualneNakazeno = [];
 
 let chart, chartData;
 
@@ -54,12 +57,6 @@ function initialize() {
 			backgroundColor: [
 				'rgba(255, 99, 132, 0.3)'
 			],
-			pointBackgoundColor: [
-				'rgba(255, 99, 132, 0.3)'
-			],
-			pointBorderColor: [
-				'rgba(255, 99, 132, 0.3)'
-			],
 			borderColor: [
 				'rgba(255, 99, 132, 1)'
 			],
@@ -68,19 +65,38 @@ function initialize() {
 		}]
 	};
 
-	kumulativniPocetUmrti = 0;
+	for (let i = 0; i < imunDoba; i++) {
+		kumulativniPocetNakazenych.push(0);
+	}
 
 	kumulativniPocetNakazenych.push(startNakazeno);
-	noveNakazeno.push(startNakazeno);
+	noveNakazenoReal.push(startNakazeno);
+	realAktualneNakazeno.push(startNakazeno);
 	noveUmrti.push(0);
 
-	for (let i = 0; i < inkubDoba; i++) {
+
+	for (let i = 0; i < inkubDoba - 1; i++) {
 		chartData.labels.push(plusDen(chartData.labels[chartData.labels.length - 1]));
-		chartData.datasets[0].data.push(0);
-		kumulativniPocetNakazenych.push(startNakazeno);
-		noveNakazeno.push(0);
+		let celkemNoveNakazeno = 0;
+		for (let j = 0; j < i; j++) {
+			rZaDen = R / inkubDoba;
+			rZaDen *= nakazitelni(kumulativniPocetNakazenych[j], kumulativniPocetNakazenych[j + imunDoba] + celkemNoveNakazeno, population);
+			celkemNoveNakazeno += rZaDen * noveNakazenoReal[j];
+		}
+		let newData = celkemNoveNakazeno;
+		noveNakazenoReal.push(newData);
+		kumulativniPocetNakazenych.push(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + newData);
+		if (noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1])
+			newData -= noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1];
+		realAktualneNakazeno.push(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
+		chartData.datasets[0].data.push(Math.round(realAktualneNakazeno[realAktualneNakazeno.length - 1]));
 		noveUmrti.push(0);
 	}
+
+	Chart.defaults.global.elements.point.backgroundColor = 'rgba(255, 99, 132, 0.3)';
+	Chart.defaults.global.elements.point.borderColor = 'rgba(255, 99, 132, .7)';
+	Chart.defaults.global.elements.point.borderWidth = 1;
+
 
 	chart = new Chart(ctx, {
 		type: 'line',
@@ -119,16 +135,37 @@ initialize();
 
 document.getElementById("play").innerHTML = "PLAY";
 function play() {
-	if (playBool) {
+	if (!playBool) {
 		document.getElementById("play").innerHTML = "PLAY";
 		return;
 	}
 	document.getElementById("play").innerHTML = "PAUSE";
 	addData(calcData());
 
-	setTimeout(play, 500);
+	setTimeout(play, playSpeed);
 }
 
 function calcData() {
-	return 0;
+	//let iDoba = imunDoba >= noveNakazenoReal.length ? (noveNakazenoReal.length - 1) : imunDoba;
+
+	let celkemNoveNakazeno = 0;
+	for (let i = realAktualneNakazeno.length - inkubDoba - 1; i < realAktualneNakazeno.length; i++) {
+		if (realAktualneNakazeno[i] + 1) {
+			rZaDen = R / inkubDoba;
+			rZaDen *= nakazitelni(kumulativniPocetNakazenych[i], kumulativniPocetNakazenych[i + imunDoba] + celkemNoveNakazeno, population);
+			celkemNoveNakazeno += (rZaDen * noveNakazenoReal[i]);
+		}
+	}
+	let newData = celkemNoveNakazeno;
+	noveNakazenoReal.push(newData);
+	kumulativniPocetNakazenych.push(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + newData);
+
+	if (noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1] + 1)
+		newData -= noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1];
+	realAktualneNakazeno.push(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
+	return Math.round(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
+}
+
+function nakazitelni(predImunDobou, celkove, L) {
+	return ((L - celkove + predImunDobou) / L);
 }
