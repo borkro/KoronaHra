@@ -1,7 +1,7 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
-const playSpeed = 500; // ms
+const playSpeed = 250; // ms
 
 const minSizeOfData = 150;
 const startNakazeno = 1;
@@ -11,9 +11,9 @@ let smrtnost = 0.012;
 let population = 10690000;
 let pocetIteraciDne = 0;
 let noveNakazenoReal = [];
-let inkubDoba = 5;
-let nemocDoba = 14;
-let imunDoba = 80;
+const inkubDoba = 5;
+const nemocDoba = 14;
+const imunDoba = 90;
 let kumulativniPocetNakazenych = [];
 let noveUmrti = [];
 let procentoNakazitelnych = 0;
@@ -36,6 +36,9 @@ function addData(data) {
 	/* if (chart.scales["y-axis-0"].max < 8000)
 	chart.options.scales.yAxes[0].ticks.max = 8000; */
 	chart.update();
+
+	document.getElementById("kumulativniUmrti").innerHTML = kumulativniPocetUmrti;
+	document.getElementById("dnesUmrti").innerHTML = Math.round(noveUmrti[noveUmrti.length - 1]);
 }
 
 function removeData() {
@@ -86,11 +89,15 @@ function initialize() {
 		let newData = celkemNoveNakazeno;
 		noveNakazenoReal.push(newData);
 		kumulativniPocetNakazenych.push(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + newData);
-		if (noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1])
+		if (noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1]) {
 			newData -= noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1];
+			noveUmrti.push(smrtnost * noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1]);
+		} else {
+			noveUmrti.push(0);
+		}
+		kumulativniPocetUmrti += Math.round(noveUmrti[noveUmrti.length - 1]);
 		realAktualneNakazeno.push(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
 		chartData.datasets[0].data.push(Math.round(realAktualneNakazeno[realAktualneNakazeno.length - 1]));
-		noveUmrti.push(0);
 	}
 
 	Chart.defaults.global.elements.point.backgroundColor = 'rgba(255, 99, 132, 0.3)';
@@ -149,6 +156,7 @@ function calcData() {
 	//let iDoba = imunDoba >= noveNakazenoReal.length ? (noveNakazenoReal.length - 1) : imunDoba;
 
 	let celkemNoveNakazeno = 0;
+	population -= noveUmrti[noveUmrti.length - 1];
 	for (let i = realAktualneNakazeno.length - inkubDoba - 1; i < realAktualneNakazeno.length; i++) {
 		if (realAktualneNakazeno[i] + 1) {
 			rZaDen = R / inkubDoba;
@@ -160,8 +168,14 @@ function calcData() {
 	noveNakazenoReal.push(newData);
 	kumulativniPocetNakazenych.push(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + newData);
 
-	if (noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1] + 1)
+	if (noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1] + 1) {
 		newData -= noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1];
+		noveUmrti.push(smrtnost * noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1]);
+	} else {
+		noveUmrti.push(0);
+	}
+	kumulativniPocetUmrti += Math.round(noveUmrti[noveUmrti.length - 1]);
+
 	realAktualneNakazeno.push(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
 	return Math.round(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
 }
