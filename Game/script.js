@@ -1,7 +1,7 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
-const sizeOfData = 200;
+const minSizeOfData = 100;
 const startNakazeno = 1;
 
 let r = 2.4;
@@ -30,16 +30,18 @@ function addData(data) {
 		dataset.data.push(data);
 	});
 	removeData();
+	/* if (chart.scales["y-axis-0"].max < 8000)
+	chart.options.scales.yAxes[0].ticks.max = 8000; */
 	chart.update();
 }
 
 function removeData() {
-	chart.data.labels.shift();
+	if (chart.data.labels.length - 1 >= minSizeOfData)
+		chart.data.labels.shift();
 	chart.data.datasets.forEach((dataset) => {
-		dataset.data.shift();
+		if (dataset.data.length - 1 >= minSizeOfData)
+			dataset.data.shift();
 	});
-	if (chart.scales["y-axis-0"].max < 8000)
-		chart.options.scales.yAxes[0].ticks.max = 8000;
 	chart.update();
 }
 
@@ -115,3 +117,18 @@ function initialize() {
 }
 initialize();
 
+document.getElementById("play").innerHTML = "PLAY";
+function play() {
+	if (playBool) {
+		document.getElementById("play").innerHTML = "PLAY";
+		return;
+	}
+	document.getElementById("play").innerHTML = "PAUSE";
+	addData(calcData());
+
+	setTimeout(play, 500);
+}
+
+function calcData() {
+	return 0;
+}
