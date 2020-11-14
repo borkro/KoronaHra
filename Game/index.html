@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>KoronaHra</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<canvas id="canvas"></canvas>
+
+
+
+	<input type="checkbox" name="rousky" id="rousky">
+	<label for="rousky">Roušky</label>
+
+	<input type="checkbox" name="rozestupy" id="rozestupy">
+	<label for="rozestupy">Rozestupy</label>
+
+	<input type="checkbox" name="skoly" id="skoly">
+	<label for="skoly">Zavřít školy</label>
+
+	<input type="checkbox" name="restaurace" id="restaurace">
+	<label for="restaurace">Zavřít školy</label>
+
+	<input type="checkbox" name="bary" id="bary">
+	<label for="bary">Zavřít bary</label>
+
+	<input type="checkbox" name="akce" id="akce">
+	<label for="akce">Omezení akcí</label>
+
+	<input type="checkbox" name="akceZrus" id="akceZrus">
+	<label for="akceZrus">Zrušit akce</label>
+
+	<input type="checkbox" name="zahranici" id="zahranici">
+	<label for="zahranici">Zavřít hranice</label>
+
+
+
+	<p>Počet úmrtí: <span id="kumulativniUmrti"></span></p>
+	<p>Počet úmrtí dnes: <span id="dnesUmrti"></span></p>
+
+
+
+	<script type="text/javascript" src="..\Chart.js-2.9.4\Chart.js-2.9.4\dist\Chart.js"></script>
+	<script type="text/javascript" src="datum.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+
+</body>
+
+</html>
