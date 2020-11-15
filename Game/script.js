@@ -6,7 +6,7 @@ const playSpeed = 250; // ms
 const minSizeOfData = 150;
 const startNakazeno = 3;
 
-const R = 3.0;
+const R = 2.5;
 let smrtnost = 0.012;
 let population = 10690000;
 let pocetIteraciDne = 0;
@@ -21,6 +21,15 @@ let kumulativniPocetUmrti = 0;
 let rZaDen = R / inkubDoba;
 let realAktualneNakazeno = [];
 let pocetPrenasecu = [];
+
+let rouskyUcinnost = 0.3;
+let rozetupyUcinnost = 0.23;
+let skolyUcinnost = 0.08;
+let restauraceUcinnost = 0.1;
+let baryUcinnost = 0.12;
+let akceUcinnost = 0.12;
+let akceZrusUcinnost = 0.2;
+let zahraniciUcinnost = 0.07;
 
 let chart, chartData;
 
@@ -195,11 +204,14 @@ function calcData() {
 		}
 	}
 	pocetPrenasecu.push(celkemPrenasecu);
+
 	rZaDen = R;
 	if (inkubDoba)
 		rZaDen /= inkubDoba;
 	rZaDen *= nakazitelni(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1 - imunDoba], kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + celkemPrenasecu, population);
+	checkboxes();
 	let newData = rZaDen * celkemPrenasecu;
+
 	noveNakazenoReal.push(newData);
 	kumulativniPocetNakazenych.push(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + newData);
 
@@ -217,4 +229,38 @@ function calcData() {
 
 function nakazitelni(predImunDobou, celkove, L) {
 	return ((celkove - predImunDobou) < L ? ((L - celkove + predImunDobou) / L) : 0);
+}
+
+function checkboxes() {
+	if (document.getElementById("lockdown").checked) {
+		document.getElementById("rousky").checked = document.getElementById("rozestupy").checked = document.getElementById("skoly").checked =
+			document.getElementById("restaurace").checked = document.getElementById("bary").checked = document.getElementById("akceZrus").checked =
+			document.getElementById("akce").checked = document.getElementById("zahranici").checked = true;
+	}
+	if (document.getElementById("rousky").checked) {
+		rZaDen *= (1 - rouskyUcinnost);
+	}
+	if (document.getElementById("rozestupy").checked) {
+		rZaDen *= (1 - rozetupyUcinnost);
+	}
+	if (document.getElementById("skoly").checked) {
+		rZaDen *= (1 - skolyUcinnost);
+	}
+	if (document.getElementById("restaurace").checked) {
+		rZaDen *= (1 - restauraceUcinnost);
+	}
+	if (document.getElementById("bary").checked) {
+		rZaDen *= (1 - baryUcinnost);
+	}
+	if (document.getElementById("akceZrus").checked) {
+		rZaDen *= (1 - akceZrusUcinnost);
+		document.getElementById("akce").checked = false;
+	}
+	if (document.getElementById("akce").checked) {
+		rZaDen *= (1 - akceUcinnost);
+	}
+	if (document.getElementById("zahranici").checked) {
+		rZaDen *= (1 - zahraniciUcinnost);
+	}
+
 }
