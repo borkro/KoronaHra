@@ -22,3 +22,7 @@ function plusDen(datum) {
 		return novyRok + "-01-01";
 	}
 }
+
+function hideUpozorneni() {
+	document.getElementById("upozorneni").style.display = "none";
+}

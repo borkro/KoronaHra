@@ -1,7 +1,7 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
-const playSpeed = 250; // ms
+const playSpeed = 350; // ms
 
 const minSizeOfData = 150;
 const startNakazeno = 3;
@@ -75,7 +75,7 @@ function initialize() {
 				'rgba(255, 99, 132, 1)'
 			],
 			borderWidth: 2,
-			lineTension: 0
+			lineTension: 0.4
 		}]
 	};
 
@@ -180,13 +180,16 @@ function initialize() {
 }
 initialize();
 
-document.getElementById("play").innerHTML = "PLAY";
+document.getElementById("play").innerHTML = "<i class=\"fas fa-play\"></i>";
+document.getElementById("play").style = "background-color: var(--blue)";
 function play() {
 	if (!playBool) {
-		document.getElementById("play").innerHTML = "PLAY";
+		document.getElementById("play").innerHTML = "<i class=\"fas fa-play\"></i>";
+		document.getElementById("play").style = "background-color: var(--blue)";
 		return;
 	}
-	document.getElementById("play").innerHTML = "PAUSE";
+	document.getElementById("play").innerHTML = "<i class=\"fas fa-pause\"></i>";
+	document.getElementById("play").style = "background-color: var(--red)";
 	addData(calcData());
 	pocetIteraciDne++;
 
@@ -237,6 +240,7 @@ function checkboxes() {
 			document.getElementById("restaurace").checked = document.getElementById("bary").checked = document.getElementById("akceZrus").checked =
 			document.getElementById("akce").checked = document.getElementById("zahranici").checked = true;
 	}
+
 	if (document.getElementById("rousky").checked) {
 		rZaDen *= (1 - rouskyUcinnost);
 	}

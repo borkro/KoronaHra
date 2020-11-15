@@ -1,9 +1,124 @@
-body {
-	max-width: 1000px;
-	margin: auto
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+:root {
+	--font: 'Open Sans', sans-serif;
+	--black: #333;
+	--white: #f5f5f5;
+	--orange: #f74e13;
+	--blue: #0dafdd;
+	--green: #0dac60;
+	--red: #f51319;
+	--gray: #3f3f3f;
 }
 
-#canvas {
-	width: 1000px;
-	min-height: 200px;
+body {
+	margin: auto;
+	max-width: 1200px;
+	font-family: var(--font);
+	font-weight: 400;
+	line-height: 1.5em;
+	color: var(--text-color);
+	text-align: center;
+	letter-spacing: 1px;
+	background-color: var(--logo-color);
+}
+
+a {
+	text-decoration: underline;
+}
+
+a:hover {
+	font-weight: bold;
+}
+
+#upozorneni {
+	margin: auto;
+	max-width: 1000px;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	padding-top: .5em;
+	padding-bottom: .5em;
+	background-color: var(--red);
+	color: var(--white);
+	text-align: left;
+	margin-bottom: 1em;
+}
+
+#upozorneni a {
+	color: var(--white);
+}
+
+#upozorneni #upozorneniBtn {
+	background-color: var(--white);
+	color: var(--red);
+	border: none;
+	cursor: pointer;
+	font-weight: bold;
+	padding-top: .2em;
+	padding-bottom: .2em;
+	padding-left: .7em;
+	padding-right: .7em;
+}
+
+#btn {
+	float: left;
+	margin: auto;
+	text-align: center;
+	vertical-align: middle;
+	margin-top: 15px;
+}
+
+#play {
+	border-radius: 50%;
+	color: var(--white);
+	font-size: 1.8em;
+	border: none;
+	width: 2em;
+	height: 2em;
+	cursor: pointer;
+}
+
+#checkboxes {
+	line-break: auto;
+	float: left;
+	text-align: left;
+	line-break: auto;
+	width: 66.7%;
+}
+
+#playground {
+	/* width: fit-content; */
+	margin: auto;
+}
+
+.lockdown {
+	color: var(--white);
+	background-color: var(--red);
+	border-radius: 5px;
+}
+
+#checkboxes label {
+	padding-left: 10px;
+	padding-right: 10px;
+	cursor: pointer;
+	width: 25%;
+	float: left;
+}
+
+#checkboxes input {
+	cursor: pointer;
+}
+
+#stats {
+	float: left;
+	width: 25%;
+	line-height: .5em;
+	text-align: left;
+}
+
+#playground:after,
+#checkboxes:after {
+	content: "";
+	display: table;
+	clear: both;
 }

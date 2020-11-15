@@ -6,49 +6,83 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>KoronaHra</title>
 	<link rel="stylesheet" href="style.css">
+	<script src="https://kit.fontawesome.com/9ea4e52ffb.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
 
+	<p id="upozorneni">Tato jednoduchá hra není simulací skutečné epidemie, slouží jen pro obecnou předstacu vývoje
+		epidemie. Oficiální informace týkající se epidemie
+		COVID-19 v ČR najdete na <a href="https://onemocneni-aktualne.mzcr.cz/covid-19">onemocneni-aktualne.mzcr.cz</a>.
+		<button id="upozorneniBtn" onclick="hideUpozorneni()">OK</button></p>
+
 	<canvas id="canvas"></canvas>
 
 
-	<button id="play" onclick="playBool = !playBool, play()"></button>
+	<div id="playground">
+		<div id="checkboxes">
+			<label for="rousky">
+				<input type="checkbox" name="rousky" id="rousky">
+				Roušky
+			</label>
+
+			<label for="rozestupy">
+				<input type="checkbox" name="rozestupy" id="rozestupy">
+				Rozestupy
+			</label>
 
 
+			<label for="skoly">
+				<input type="checkbox" name="skoly" id="skoly">
+				Zavřít školy
+			</label>
 
-	<input type="checkbox" name="rousky" id="rousky">
-	<label for="rousky">Roušky</label>
+			<label for="restaurace">
+				<input type="checkbox" name="restaurace" id="restaurace">
+				Zavřít restaurace
+			</label>
 
-	<input type="checkbox" name="rozestupy" id="rozestupy">
-	<label for="rozestupy">Rozestupy</label>
-
-	<input type="checkbox" name="skoly" id="skoly">
-	<label for="skoly">Zavřít školy</label>
-
-	<input type="checkbox" name="restaurace" id="restaurace">
-	<label for="restaurace">Zavřít restaurace</label>
-
-	<input type="checkbox" name="bary" id="bary">
-	<label for="bary">Zavřít bary</label>
-
-	<input type="checkbox" name="akce" id="akce">
-	<label for="akce">Omezení akcí</label>
-
-	<input type="checkbox" name="akceZrus" id="akceZrus">
-	<label for="akceZrus">Zrušit akce</label>
-
-	<input type="checkbox" name="zahranici" id="zahranici">
-	<label for="zahranici">Zavřít hranice</label>
-
-	<input type="checkbox" name="lockdown" id="lockdown">
-	<label for="lockdown">LOCKDOWN</label>
+			<label for="bary">
+				<input type="checkbox" name="bary" id="bary">
+				Zavřít bary
+			</label>
 
 
+			<label for="zahranici">
+				<input type="checkbox" name="zahranici" id="zahranici">
+				Zavřít hranice
+			</label>
 
-	<p>Datum: <span id="datum"></span></p>
-	<p>Počet úmrtí: <span id="kumulativniUmrti"></span></p>
-	<p>Počet úmrtí dnes: <span id="dnesUmrti"></span></p>
+
+			<label for="akce">
+				<input type="checkbox" name="akce" id="akce">
+				Omezení akcí
+			</label>
+
+
+			<label for="akceZrus">
+				<input type="checkbox" name="akceZrus" id="akceZrus">
+				Zrušit akce
+			</label>
+
+
+			<label for="lockdown" class="lockdown">
+				<input type="checkbox" name="lockdown" id="lockdown">
+				LOCKDOWN
+			</label>
+
+		</div>
+
+		<div id="stats">
+			<p>Datum: <span id="datum"></span></p>
+			<p>Počet úmrtí dnes: <span id="dnesUmrti"></span></p>
+			<p>Počet úmrtí: <span id="kumulativniUmrti"></span></p>
+		</div>
+
+		<div id="btn">
+			<button title="play" id="play" onclick="playBool = !playBool, play()"></button>
+		</div>
+	</div>
 
 
 
