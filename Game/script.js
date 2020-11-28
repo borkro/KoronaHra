@@ -4,52 +4,32 @@ let ctx = canvas.getContext("2d");
 const playSpeed = 350; // ms
 
 const minSizeOfData = 150;
-const startNakazeno = 3;
 
-const R = 2.5;
-let smrtnost = 0.012;
-let population = 10690000;
-let pocetIteraciDne = 0;
-let noveNakazenoReal = [];
-const inkubDoba = 5;
-const nemocDoba = 14;
-const imunDoba = 90;
-let kumulativniPocetNakazenych = [];
-let noveUmrti = [];
-let procentoNakazitelnych = 0;
-let kumulativniPocetUmrti = 0;
-let rZaDen = R / inkubDoba;
-let realAktualneNakazeno = [];
-let pocetPrenasecu = [];
+const LEFT_AXIS_VARIABLE = "aktualneNakazenoDetected";
+const RIGHT_AXIS_VARIABLE = "kumulativniPocetUmrti";
 
-let rouskyUcinnost = 0.3;
-let rozetupyUcinnost = 0.23;
-let skolyUcinnost = 0.08;
-let restauraceUcinnost = 0.1;
-let baryUcinnost = 0.12;
-let akceUcinnost = 0.12;
-let akceZrusUcinnost = 0.2;
-let zahraniciUcinnost = 0.07;
+// const LEFT_AXIS_VARIABLE = "noveNakazenoDetected";
+// const RIGHT_AXIS_VARIABLE = "noveUmrti";
 
 let chart, chartData;
 
 let playBool = false;
 
+let simulation = null;
 
-function addData(data) {
-	let newDatum = plusDen(chart.data.labels[chart.data.labels.length - 1]);
-	chart.data.labels.push(newDatum);
-	chart.data.datasets.forEach((dataset) => {
-		dataset.data.push(data);
-	});
+
+function addData(simDay) {
+	chart.data.labels.push(simDay.date);
+	chart.data.datasets[0].data.push(simDay[LEFT_AXIS_VARIABLE]);
+	chart.data.datasets[1].data.push(simDay[RIGHT_AXIS_VARIABLE]);
 	removeData();
 	/* if (chart.scales["y-axis-0"].max < 8000)
 	chart.options.scales.yAxes[0].ticks.max = 8000; */
 	chart.update();
 
-	document.getElementById("datum").innerHTML = newDatum;
-	document.getElementById("kumulativniUmrti").innerHTML = kumulativniPocetUmrti;
-	document.getElementById("dnesUmrti").innerHTML = Math.round(noveUmrti[noveUmrti.length - 1]);
+	document.getElementById("datum").innerHTML = simDay.date;
+	document.getElementById("kumulativniUmrti").innerHTML = Math.round(simDay.kumulativniPocetUmrti);
+	document.getElementById("dnesUmrti").innerHTML = Math.round(simDay.noveUmrti);
 }
 
 function removeData() {
@@ -59,7 +39,6 @@ function removeData() {
 		if (dataset.data.length - 1 >= minSizeOfData)
 			dataset.data.shift();
 	});
-	chart.update();
 }
 
 function initialize() {
@@ -67,6 +46,7 @@ function initialize() {
 		labels: [],
 		datasets: [{
 			label: 'počet nakažených',
+            yAxisID: 'left',
 			data: [],
 			backgroundColor: [
 				'rgba(255, 99, 132, 0.3)'
@@ -76,68 +56,21 @@ function initialize() {
 			],
 			borderWidth: 2,
 			lineTension: 0.4
+		}, {
+			label: 'počet mrtvých',
+            yAxisID: 'right',
+			data: [],
+			borderWidth: 2,
+			lineTension: 0.4
 		}]
 	};
 
-	for (let i = 0; i < imunDoba; i++) {
-		kumulativniPocetNakazenych.push(0);
-	}
-
-	kumulativniPocetNakazenych.push(startNakazeno);
-
-	noveNakazenoReal.push(startNakazeno);
-	realAktualneNakazeno.push(startNakazeno);
-	pocetPrenasecu.push(startNakazeno);
-
-	for (let i = 0; i < inkubDoba; i++) {
-		let celkemPrenasecu = 0;
-		for (let j = 0; j < i; j++) {
-			celkemPrenasecu += noveNakazenoReal[j];
-		}
-		pocetPrenasecu.push(celkemPrenasecu);
-		rZaDen = R;
-		if (inkubDoba)
-			rZaDen /= inkubDoba;
-		rZaDen *= nakazitelni(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - imunDoba - 1], kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + celkemPrenasecu, population);
-		let newData = rZaDen * celkemPrenasecu;
-		noveNakazenoReal.push(newData);
-		realAktualneNakazeno.push(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
-		kumulativniPocetNakazenych.push(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + newData);
-	}
-
-	noveUmrti.push(0);
-	pocetIteraciDne = 1;
-
-
-	for (let i = 0; i < inkubDoba; i++) {
-		if (i == 0) {
-			chartData.labels.push("2020-03-01")
-		} else {
-			chartData.labels.push(plusDen(chartData.labels[chartData.labels.length - 1]));
-		}
-		let celkemPrenasecu = 0;
-		for (let j = 0; j < inkubDoba; j++) {
-			celkemPrenasecu += noveNakazenoReal[j];
-		}
-		pocetPrenasecu.push(celkemPrenasecu);
-		rZaDen = R;
-		if (inkubDoba)
-			rZaDen /= inkubDoba;
-		rZaDen *= nakazitelni(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - imunDoba - 1], kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + celkemPrenasecu, population);
-		let newData = rZaDen * celkemPrenasecu;
-		noveNakazenoReal.push(newData);
-		kumulativniPocetNakazenych.push(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + newData);
-		if (noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1]) {
-			newData -= noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1];
-			noveUmrti.push(smrtnost * noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1]);
-		} else {
-			noveUmrti.push(0);
-		}
-		kumulativniPocetUmrti += Math.round(noveUmrti[noveUmrti.length - 1]);
-		realAktualneNakazeno.push(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
-		chartData.datasets[0].data.push(Math.round(realAktualneNakazeno[realAktualneNakazeno.length - inkubDoba - 1]));
-		pocetIteraciDne++;
-	}
+    simulation = new CovidSimulation("2020-03-01");
+    simulation.simDays.forEach( day => {
+		chartData.labels.push(day.date);
+		chartData.datasets[0].data.push(day[LEFT_AXIS_VARIABLE]);
+		chartData.datasets[1].data.push(day[RIGHT_AXIS_VARIABLE]);
+    });
 
 	Chart.defaults.global.elements.point.backgroundColor = 'rgba(255, 99, 132, 0.3)';
 	Chart.defaults.global.elements.point.borderColor = 'rgba(255, 99, 132, .7)';
@@ -159,11 +92,19 @@ function initialize() {
 			},
 			scales: {
 				yAxes: [{
+                    id: 'left',
 					ticks: {
 						beginAtZero: true//,
 					}/* ,
 					type: 'logarithmic' */
-				}],
+				}, {
+                    id: 'right',
+                    position: 'right',
+					ticks: {
+						beginAtZero: true//,
+					}/* ,
+					type: 'logarithmic' */
+				} ],
 				xAxes: [{
 					ticks: {
 						autoskip: true/* ,
@@ -174,9 +115,11 @@ function initialize() {
 		}
 	});
 
-	document.getElementById("datum").innerHTML = chartData.labels[chartData.labels.length - 1];
-	document.getElementById("kumulativniUmrti").innerHTML = kumulativniPocetUmrti;
-	document.getElementById("dnesUmrti").innerHTML = noveUmrti[noveUmrti.length - 1];
+    let simDay = simulation.getLastDay();
+
+	document.getElementById("datum").innerHTML = simDay.date;
+	document.getElementById("kumulativniUmrti").innerHTML = Math.round(simDay.kumulativniPocetUmrti);
+	document.getElementById("dnesUmrti").innerHTML = Math.round(simDay.noveUmrti);
 }
 initialize();
 
@@ -190,81 +133,8 @@ function play() {
 	}
 	document.getElementById("play").innerHTML = "<i class=\"fas fa-pause\"></i>";
 	document.getElementById("play").style = "background-color: var(--red)";
-	addData(calcData());
-	pocetIteraciDne++;
+	addData(simulation.simOneDay());
 
 	setTimeout(play, playSpeed);
 }
 
-function calcData() {
-	//let iDoba = imunDoba >= noveNakazenoReal.length ? (noveNakazenoReal.length - 1) : imunDoba;
-
-	let celkemPrenasecu = 0;
-	population -= noveUmrti[noveUmrti.length - 1];
-	for (let i = realAktualneNakazeno.length - inkubDoba; i < realAktualneNakazeno.length; i++) {
-		if (realAktualneNakazeno[i] + 1) {
-			celkemPrenasecu += noveNakazenoReal[i];
-		}
-	}
-	pocetPrenasecu.push(celkemPrenasecu);
-
-	rZaDen = R;
-	if (inkubDoba)
-		rZaDen /= inkubDoba;
-	rZaDen *= nakazitelni(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1 - imunDoba], kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + celkemPrenasecu, population);
-	checkboxes();
-	let newData = rZaDen * celkemPrenasecu;
-
-	noveNakazenoReal.push(newData);
-	kumulativniPocetNakazenych.push(kumulativniPocetNakazenych[kumulativniPocetNakazenych.length - 1] + newData);
-
-	if (noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1] + 1) {
-		newData -= noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1];
-		noveUmrti.push(smrtnost * noveNakazenoReal[noveNakazenoReal.length - nemocDoba - 1]);
-	} else {
-		noveUmrti.push(0);
-	}
-	kumulativniPocetUmrti += Math.round(noveUmrti[noveUmrti.length - 1]);
-
-	realAktualneNakazeno.push(realAktualneNakazeno[realAktualneNakazeno.length - 1] + newData);
-	return Math.round(realAktualneNakazeno[realAktualneNakazeno.length - inkubDoba - 1]);
-}
-
-function nakazitelni(predImunDobou, celkove, L) {
-	return ((celkove - predImunDobou) < L ? ((L - celkove + predImunDobou) / L) : 0);
-}
-
-function checkboxes() {
-	if (document.getElementById("lockdown").checked) {
-		document.getElementById("rousky").checked = document.getElementById("rozestupy").checked = document.getElementById("skoly").checked =
-			document.getElementById("restaurace").checked = document.getElementById("bary").checked = document.getElementById("akceZrus").checked =
-			document.getElementById("akce").checked = document.getElementById("zahranici").checked = true;
-	}
-
-	if (document.getElementById("rousky").checked) {
-		rZaDen *= (1 - rouskyUcinnost);
-	}
-	if (document.getElementById("rozestupy").checked) {
-		rZaDen *= (1 - rozetupyUcinnost);
-	}
-	if (document.getElementById("skoly").checked) {
-		rZaDen *= (1 - skolyUcinnost);
-	}
-	if (document.getElementById("restaurace").checked) {
-		rZaDen *= (1 - restauraceUcinnost);
-	}
-	if (document.getElementById("bary").checked) {
-		rZaDen *= (1 - baryUcinnost);
-	}
-	if (document.getElementById("akceZrus").checked) {
-		rZaDen *= (1 - akceZrusUcinnost);
-		document.getElementById("akce").checked = false;
-	}
-	if (document.getElementById("akce").checked) {
-		rZaDen *= (1 - akceUcinnost);
-	}
-	if (document.getElementById("zahranici").checked) {
-		rZaDen *= (1 - zahraniciUcinnost);
-	}
-
-}
