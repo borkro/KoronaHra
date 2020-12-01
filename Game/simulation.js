@@ -77,7 +77,8 @@ class CovidSimulation {
         let kumulativniPocetNakazenychReal = yesterday.kumulativniPocetNakazenychReal + noveNakazenoReal;
         let realAktualneNakazeno = yesterday.realAktualneNakazeno + noveNakazenoReal - infectionsResolved;
         let aktualneNakazenoDetected = Math.max(0, realAktualneNakazeno - (kumulativniPocetNakazenychReal - kumulativniPocetNakazenychDetected));
-
+        let kumulativniPocetUmrti = yesterday.kumulativniPocetUmrti + noveUmrti;
+        let smrtnost = kumulativniPocetNakazenychDetected > 0 ? kumulativniPocetUmrti / kumulativniPocetNakazenychDetected : 0;
         this.simDays.push({
             date: plusDen(yesterday.date),
             noveNakazenoDetected: todayMinusIncubation.noveNakazenoReal,
@@ -88,7 +89,8 @@ class CovidSimulation {
             aktualneNakazenoDetected: aktualneNakazenoDetected,
             pocetPrenasecu: celkemPrenasecu,
             noveUmrti: noveUmrti,
-            kumulativniPocetUmrti: yesterday.kumulativniPocetUmrti + noveUmrti
+            kumulativniPocetUmrti: kumulativniPocetUmrti,
+            smrtnostPct: smrtnost * 100
         });
 
         return this.getLastDay();
