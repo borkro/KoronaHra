@@ -138,3 +138,7 @@ function play() {
 	setTimeout(play, playSpeed);
 }
 
+
+function hideUpozorneni() {
+	document.getElementById("upozorneni").style.display = "none";
+}
