@@ -10,7 +10,7 @@ function rok(datum) {
 
 
 const dnyVMesici = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-function plusDen(datum) {
+function plusDay(datum) {
 	if (den(datum) < dnyVMesici[mesic(datum) - 1]) {
 		let novyDen = parseInt(den(datum)) + 1;
 		return (rok(datum) + "-" + mesic(datum) + "-" + ("0" + novyDen).slice(-2));

@@ -40,8 +40,8 @@ function displayData(simDay) {
     });
 
 	document.getElementById("datum").innerHTML = simDay.date;
-	document.getElementById("kumulativniUmrti").innerHTML = Math.round(simDay.kumulativniPocetUmrti);
-	document.getElementById("dnesUmrti").innerHTML = Math.round(simDay.noveUmrti);
+	document.getElementById("deadTotal").innerHTML = Math.round(simDay.deadTotal);
+	document.getElementById("deathsToday").innerHTML = Math.round(simDay.deathsToday);
 }
 
 function copyWithDefault(dict, defaults) {
@@ -128,33 +128,33 @@ function initialize() {
 
     var datasets1 = [ {
 			label: 'počet aktuálně nakažených',
-            dataset: 'aktualneNakazenoDetected',
+            dataset: 'detectedActiveInfectionsTotal',
             yAxisID: 'left'
 		}, {
 			label: 'počet mrtvých',
-            dataset: 'kumulativniPocetUmrti',
+            dataset: 'deadTotal',
             yAxisID: 'right',
 		}];
     createChart("canvas1", DISPLAY_N_DAYS, datasets1, leftRightYAxes);
 
     var datasets2 = [ {
 			label: 'počet nově nakažených',
-            dataset: 'noveNakazenoDetected',
+            dataset: 'detectedInfectionsToday',
             yAxisID: 'left'
 		}, {
 			label: 'počet nových mrtvých',
-            dataset: 'noveUmrti',
+            dataset: 'deathsToday',
             yAxisID: 'right',
 		}];
     createChart("canvas2", DISPLAY_N_DAYS, datasets2, leftRightYAxes);
 
     var datasets3 = [ {
 			label: 'smrtnost [%]',
-            dataset: 'smrtnostPct',
+            dataset: 'mortalityPct',
 		}];
     createChart("canvas3", DISPLAY_N_DAYS, datasets3, leftYAxe);
 
-    simulation.simDays.forEach(day => displayData(day));
+    simulation.simDayStats.forEach(day => displayData(day));
 }
 initialize();
 

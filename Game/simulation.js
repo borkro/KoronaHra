@@ -1,33 +1,35 @@
+// Discrete SIR model variant with delay and reinfections
 
 class CovidSimulation {
     constructor(startDate) {
         // pandemic params
         this.R0 = 2.5;
-        this.smrtnost = 0.012;
-        this.population = 10690000;
-        this.inkubDoba = 5;
-        this.nemocDoba = 14;
-        this.imunDoba = 90;
-        this.startNakazeno = 3;
+        this.mortality = 0.012;
+        this.initialPopulation = 10690000;
+        this.infectedStart = 3;
+
+        // All covid parameters counted from the infection day
+        this.incubationDays = 5; // Days until infection is detected
+        this.infectiousFrom = 3; // First day when people are infectious
+        this.infectiousTo = 8;   // Last day when people are infectious (they will isolate after the onset of COVID)
+        this.recoveryDays = 14 + this.incubationDays;
+        this.timeToDeathDays = 21 + this.incubationDays;
+        this.immunityDays = 90 + this.recoveryDays;
 
         this.simDays = [];
+        this.simDayStats = [];
 
         this.simDays.push({
             date: startDate,
-            noveNakazenoDetected: 0,
-            kumulativniPocetNakazenychDetected: 0,              // After incubation
-            noveNakazenoReal: this.startNakazeno,
-            kumulativniPocetNakazenychReal: this.startNakazeno, // Including before incubation
-            realAktualneNakazeno: this.startNakazeno,
-            aktualneNakazenoDetected: 0,
-            pocetPrenasecu: this.startNakazeno,
-            noveUmrti: 0,
-            kumulativniPocetUmrti: 0
+            suspectible: this.initialPopulation - this.infectedStart,
+            infected: this.infectedStart,
+            recovered: 0,
+            dead: 0,
+            infectedToday: this.infectedStart,
+            deathsToday: 0
         });
 
-        for (let i = 1; i < this.inkubDoba; i++) {
-            this.simOneDay();
-        }
+        this.calcStats();
     }
 
     getDayInPast(n) {
@@ -37,67 +39,89 @@ class CovidSimulation {
         } else {
             // Days before the start of the epidemic have no sick people
             return {
-                noveNakazenoDetected: 0,
-                kumulativniPocetNakazenychDetected: 0,
-                noveNakazenoReal: 0,
-                kumulativniPocetNakazenychReal: 0,
-                realAktualneNakazeno: 0,
-                aktualneNakazenoDetected: 0,
-                pocetPrenasecu: 0,
-                noveUmrti: 0,
-                kumulativniPocetUmrti: 0
+                date: null,
+                suspectible: this.initialPopulation,
+                infected: 0,
+                recovered: 0,
+                dead: 0,
+                infectedToday: 0,
+                deathsToday: 0
             };
         }
     }
 
-    getLastDay() {
-        return this.getDayInPast(1);
-    }
-
     simOneDay() {
-        let celkemPrenasecu = 0;
         let yesterday = this.getDayInPast(1);
-        let todayMinusIncubation = this.getDayInPast(this.inkubDoba);
+        let mRate = this.mortality;       // mortality rate
+        let sRate = 1. - this.mortality;  // survival rate
 
-        this.population -= yesterday.noveUmrti;
-        for (let i = Math.max(this.simDays.length - this.inkubDoba, 0); i < this.simDays.length; i++) {
-            celkemPrenasecu += this.simDays[i].noveNakazenoReal;
+        let suspectible = yesterday.suspectible;
+        let infected = yesterday.infected;
+        let recovered = yesterday.recovered;
+        let dead = yesterday.dead;
+
+        let population = yesterday.suspectible + yesterday.infected + yesterday.recovered;
+        let infectious = 0.;
+        for (let i = this.infectiousFrom; i <= this.infectiousTo; ++i) {
+            infectious += this.getDayInPast(i).infectedToday;
         }
+        infectious /= (this.infectiousTo - this.infectiousFrom + 1);
+        let infectedToday = infectious * this.R0 * getMitigationMult() * yesterday.suspectible / population;
+        infected += infectedToday;
+        suspectible -= infectedToday;
 
-        let rZaDen = this.R0;
-        if (this.inkubDoba)
-            rZaDen /= this.inkubDoba;
-        rZaDen *= nakazitelni(this.getDayInPast(1 + this.imunDoba).kumulativniPocetNakazenychReal, yesterday.kumulativniPocetNakazenychReal, this.population);
-        rZaDen *= getMitigationMult();
-        let noveNakazenoReal = rZaDen * celkemPrenasecu;
+        let recoveredToday = this.getDayInPast(this.recoveryDays).infectedToday * sRate;
+        recovered += recoveredToday;
+        infected -= recoveredToday;
 
-        let infectionsResolved = this.getDayInPast(1 + this.nemocDoba).noveNakazenoReal;
-        let noveUmrti = this.smrtnost * infectionsResolved;
-        let kumulativniPocetNakazenychDetected = todayMinusIncubation.kumulativniPocetNakazenychReal;
-        let kumulativniPocetNakazenychReal = yesterday.kumulativniPocetNakazenychReal + noveNakazenoReal;
-        let realAktualneNakazeno = yesterday.realAktualneNakazeno + noveNakazenoReal - infectionsResolved;
-        let aktualneNakazenoDetected = Math.max(0, realAktualneNakazeno - (kumulativniPocetNakazenychReal - kumulativniPocetNakazenychDetected));
-        let kumulativniPocetUmrti = yesterday.kumulativniPocetUmrti + noveUmrti;
-        let smrtnost = kumulativniPocetNakazenychDetected > 0 ? kumulativniPocetUmrti / kumulativniPocetNakazenychDetected : 0;
+        let deathsToday = this.getDayInPast(this.timeToDeathDays).infectedToday * mRate;
+        dead += deathsToday;
+        infected -= deathsToday;
+
+        let endedImmunityToday = this.getDayInPast(this.immunityDays).infectedToday * sRate;
+        suspectible += endedImmunityToday;
+        recovered -= endedImmunityToday;
+
         this.simDays.push({
-            date: plusDen(yesterday.date),
-            noveNakazenoDetected: todayMinusIncubation.noveNakazenoReal,
-            kumulativniPocetNakazenychDetected: kumulativniPocetNakazenychDetected,
-            noveNakazenoReal: noveNakazenoReal,
-            kumulativniPocetNakazenychReal: kumulativniPocetNakazenychReal,
-            realAktualneNakazeno: realAktualneNakazeno,
-            aktualneNakazenoDetected: aktualneNakazenoDetected,
-            pocetPrenasecu: celkemPrenasecu,
-            noveUmrti: noveUmrti,
-            kumulativniPocetUmrti: kumulativniPocetUmrti,
-            smrtnostPct: smrtnost * 100
+            date: plusDay(yesterday.date),
+            suspectible: suspectible,
+            infected: infected,
+            recovered: recovered,
+            dead: dead,
+            infectedToday: infectedToday,
+            deathsToday: deathsToday
         });
 
-        return this.getLastDay();
+        return this.calcStats();
     }
-}
+
+    calcStats() {
+        let today = this.getDayInPast(1);
+        let lastStat = (this.simDayStats.length > 0) ? this.simDayStats[this.simDayStats.length - 1] : null;
 
 
-function nakazitelni(predImunDobou, celkove, L) {
-	return ((celkove - predImunDobou) < L ? ((L - celkove + predImunDobou) / L) : 0);
-}
+        let undetectedInfections = 0;
+        for(let i = 1; i <= this.incubationDays; i++) {
+            undetectedInfections += this.getDayInPast(i).infectedToday;
+        }
+
+        let detectedInfectionsToday = this.getDayInPast(this.incubationDays + 1).infectedToday;
+        let detectedInfectionsTotal = ((lastStat != null) ? lastStat.detectedInfectionsTotal : 0)
+                + detectedInfectionsToday;
+
+        let stats = {
+            date: today.date,
+            deadTotal: today.dead,
+            deathsToday: today.deathsToday,
+            detectedInfectionsToday: detectedInfectionsToday,
+            detectedInfectionsTotal: detectedInfectionsTotal,
+            detectedActiveInfectionsTotal: today.infected - undetectedInfections,
+            mortalityPct: 100. * today.dead / detectedInfectionsTotal,
+        };
+
+        this.simDayStats.push(stats);
+
+        return stats;
+    }
+ }
+
