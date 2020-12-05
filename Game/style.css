@@ -60,6 +60,26 @@ a:hover {
 	padding-right: .7em;
 }
 
+#chart-row-1, #chart-row-2 {
+    height: 100%;
+	width: 100%;
+}
+
+#chart-1-1-container {
+	width: 100%;
+}
+
+#chart-2-1-container, #chart-2-2-container, #chart-2-3-container {
+	width: 33.3%;
+    float: left;
+}
+
+/*
+#chart-1-1, #chart-2-1, #chart-2-2, #chart-2-3 {
+    height: 20%;
+}
+*/
+
 #btn {
 	float: left;
 	margin: auto;
