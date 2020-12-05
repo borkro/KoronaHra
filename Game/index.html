@@ -16,73 +16,73 @@
 		COVID-19 v ČR najdete na <a href="https://onemocneni-aktualne.mzcr.cz/covid-19">onemocneni-aktualne.mzcr.cz</a>.
 		<button id="upozorneniBtn" onclick="hideUpozorneni()">OK</button></p>
 
-	<canvas id="canvas1" height="70%"></canvas>
-	<canvas id="canvas2" height="30%"></canvas>
-	<canvas id="canvas3" height="30%"></canvas>
+	<div id="chart-row-1">
+        <div id="chart-1-1-container">
+	        <canvas id="chart-1-1" height="100%"></canvas>
+        </div>
+    </div>
+	<div id="chart-row-2">
+        <div id="chart-2-1-container">
+	        <canvas id="chart-2-1" height="200%"></canvas>
+        </div>
+        <div id="chart-2-2-container">
+	        <canvas id="chart-2-2" height="200%"></canvas>
+        </div>
+        <div id="chart-2-3-container">
+	        <canvas id="chart-2-3" height="200%"></canvas>
+        </div>
+	</div>
 
 
 	<div id="playground">
-		<div id="checkboxes">
-			<label for="rousky">
-				<input type="checkbox" name="rousky" id="rousky">
-				Roušky
-			</label>
+        <table id="mitigation">
+            <tr>
+                <td width="12%">
+                    <input type="radio" name="pes" id="pes-0" checked="checked">
+                    <label for="pes-0" id="pes-1-label">PES-0</label>
+                </td>
+                <td>
+                    Otevřít vše
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" name="pes" id="pes-1">
+                    <label for="pes-1" id="pes-1-label">PES-1</label>
+                </td>
+                <td>
+    		        <div id="pes-1-checkboxes"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" name="pes" id="pes-2">
+                    <label for="pes-2" id="pes-2-label">PES-2</label>
+                </td>
+                <td>
+    		        <div id="pes-2-checkboxes"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" name="pes" id="pes-3">
+                    <label for="pes-2" id="pes-3-label">PES-3</label>
+                </td>
+                <td>
+    		        <label class="lockdown">LOCKDOWN</label>
+                </td>
+            </tr>
+        </table>
 
-			<label for="rozestupy">
-				<input type="checkbox" name="rozestupy" id="rozestupy">
-				Rozestupy
-			</label>
-
-
-			<label for="skoly">
-				<input type="checkbox" name="skoly" id="skoly">
-				Zavřít školy
-			</label>
-
-			<label for="restaurace">
-				<input type="checkbox" name="restaurace" id="restaurace">
-				Zavřít restaurace
-			</label>
-
-			<label for="bary">
-				<input type="checkbox" name="bary" id="bary">
-				Zavřít bary
-			</label>
-
-
-			<label for="zahranici">
-				<input type="checkbox" name="zahranici" id="zahranici">
-				Zavřít hranice
-			</label>
-
-
-			<label for="akce">
-				<input type="checkbox" name="akce" id="akce">
-				Omezení akcí
-			</label>
-
-
-			<label for="akceZrus">
-				<input type="checkbox" name="akceZrus" id="akceZrus">
-				Zrušit akce
-			</label>
-
-
-			<label for="lockdown" class="lockdown">
-				<input type="checkbox" name="lockdown" id="lockdown">
-				LOCKDOWN
-			</label>
-
+		<div id="btn">
+			<button title="play" id="play" onclick="playBool = !playBool, play()"></button>
 		</div>
 
 		<div id="stats">
 			<p>Datum: <span id="datum"></span></p>
-			<p>Počet úmrtí dnes: <span id="dnesUmrti"></span></p>
-			<p>Počet úmrtí: <span id="kumulativniUmrti"></span></p>
-		</div>
-
-		<div id="btn">
-			<button title="play" id="play" onclick="playBool = !playBool, play()"></button>
+			<p>Počet úmrtí dnes: <span id="deathsToday"></span></p>
+			<p>Počet úmrtí: <span id="deadTotal"></span></p>
+			<p>Náklady: <span id="costTotal"></span> mld. Kč</p>
 		</div>
 	</div>
 

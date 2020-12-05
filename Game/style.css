@@ -60,8 +60,22 @@ a:hover {
 	padding-right: .7em;
 }
 
+#chart-row-1, #chart-row-2 {
+    height: 100%;
+	width: 100%;
+}
+
+#chart-1-1-container {
+	width: 100%;
+}
+
+#chart-2-1-container, #chart-2-2-container, #chart-2-3-container {
+	width: 33.3%;
+    float: left;
+}
+
 #btn {
-	float: left;
+	float: right;
 	margin: auto;
 	text-align: center;
 	vertical-align: middle;
@@ -78,12 +92,21 @@ a:hover {
 	cursor: pointer;
 }
 
-#checkboxes {
-	line-break: auto;
+#mitigation {
+	width: 66.7%;
 	float: left;
+}
+
+#mitigation td {
+    vertical-align: top;
+    text-align: left;
+}
+
+#pes-1-checkboxes, #pes-2-checkboxes {
+	line-break: auto;
 	text-align: left;
 	line-break: auto;
-	width: 66.7%;
+	width: 110%;
 }
 
 #playground {
@@ -97,11 +120,11 @@ a:hover {
 	border-radius: 5px;
 }
 
-#checkboxes label {
-	padding-left: 10px;
-	padding-right: 10px;
+.checkbox-label {
+	padding-left: 3px;
+	padding-right: 3px;
 	cursor: pointer;
-	width: 25%;
+	width: 23%;
 	float: left;
 }
 
@@ -110,7 +133,7 @@ a:hover {
 }
 
 #stats {
-	float: left;
+	float: right;
 	width: 25%;
 	line-height: .5em;
 	text-align: left;

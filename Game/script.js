@@ -40,8 +40,9 @@ function displayData(simDay) {
     });
 
 	document.getElementById("datum").innerHTML = simDay.date;
-	document.getElementById("kumulativniUmrti").innerHTML = Math.round(simDay.kumulativniPocetUmrti);
-	document.getElementById("dnesUmrti").innerHTML = Math.round(simDay.noveUmrti);
+	document.getElementById("deadTotal").innerHTML = Math.round(simDay.deadTotal);
+	document.getElementById("deathsToday").innerHTML = Math.round(simDay.deathsToday);
+	document.getElementById("costTotal").innerHTML = simDay.costTotal/1e3;
 }
 
 function copyWithDefault(dict, defaults) {
@@ -63,18 +64,28 @@ function createChart(canvasId, maxDays, datasets, yAxes) {
 			borderWidth: 2,
 			lineTension: 0.4
 	};
+    let colorDefault = [
+	    'rgba(  0,   0, 255, .7)',
+	    'rgba(255,   0,   0, .7)',
+	    'rgba(  0, 255,   0, .7)',
+    ];
 
     let chartDatasets = [];
-    datasets.forEach(dataset => {
+
+    for(let i = 0; i < datasets.length; i++) {
+        let dataset = datasets[i];
         let d = copyWithDefault(dataset, datasetDefault);
         delete d.dataset;
+        if (!d["borderColor"]) {
+            d["borderColor"] = colorDefault[i];
+        }
         chartDatasets.push(d);
-    });
+    }
 
     let chartYAxes = [];
     let yAxisDefault = {
 		ticks: {
-			beginAtZero: true//,
+			beginAtZero: true,
 		}
     };
 
@@ -115,6 +126,29 @@ function createChart(canvasId, maxDays, datasets, yAxes) {
     charts.push(chart);
 }
 
+function formatWithThousandsSeparator(value, dec) {
+    if (value < 0) {
+        return "-" + formatWithThousandsSeparator(-value, dec);
+    }
+
+    let v = Math.floor(value);
+    let ret = "0";
+    // whole number part
+    if (v < 1000) {
+        ret = v.toString();
+    } else {
+        let a = (v % 1000 + 1000).toString().slice(1);
+        ret = formatWithThousandsSeparator(v / 1000, 0) + "," + a;
+    }
+
+    if (dec > 0) {
+        let frac = Math.floor((1 + value - v) * Math.pow(10, dec)).toString().slice(1);
+        ret = ret + "." + frac;
+    }
+
+    return ret;
+}
+
 function initialize() {
     simulation = new CovidSimulation("2020-03-01");
 
@@ -122,39 +156,53 @@ function initialize() {
 	Chart.defaults.global.elements.point.borderColor = 'rgba(255, 99, 132, .7)';
 	Chart.defaults.global.elements.point.borderWidth = 1;
 
-    var leftYAxe = [ {id: 'left'} ];
-    var leftRightYAxes = [ {id: 'left'},
-                           {id: 'right', position: 'right'} ];
+    var thousandsTicks = {
+			beginAtZero: true,
+            callback: function(value, index, values) {
+                return formatWithThousandsSeparator(value/1000, values[0] > 1000 ? 1 : 3);
+            }
+        };
+    var simpleLeftAxe = [ {id: 'left'} ];
+    var thousandsLeftAxe = [ {id: 'left', ticks: thousandsTicks} ];
+    var thousandsLeftRightAxes = [ {id: 'left', ticks: thousandsTicks},
+                           {id: 'right', ticks: thousandsTicks, position: 'right'} ];
 
-    var datasets1 = [ {
-			label: 'počet aktuálně nakažených',
-            dataset: 'aktualneNakazenoDetected',
+    var datasets11 = [ {
+			label: 'nově nakažených [tis]',
+            dataset: 'detectedInfectionsToday',
             yAxisID: 'left'
 		}, {
-			label: 'počet mrtvých',
-            dataset: 'kumulativniPocetUmrti',
+			label: 'nových mrtvých [tis]',
+            dataset: 'deathsToday',
             yAxisID: 'right',
 		}];
-    createChart("canvas1", DISPLAY_N_DAYS, datasets1, leftRightYAxes);
+    createChart("chart-1-1", DISPLAY_N_DAYS, datasets11, thousandsLeftRightAxes);
 
-    var datasets2 = [ {
-			label: 'počet nově nakažených',
-            dataset: 'noveNakazenoDetected',
+    var datasets21 = [ {
+			label: 'aktuálně nakažených [tis]',
+            dataset: 'detectedActiveInfectionsTotal',
+            yAxisID: 'left'
+		}];
+    createChart("chart-2-1", DISPLAY_N_DAYS, datasets21, thousandsLeftAxe);
+
+    var datasets22 = [ {
+			label: 'nakažených [tis]',
+            dataset: 'detectedInfectionsTotal',
             yAxisID: 'left'
 		}, {
-			label: 'počet nových mrtvých',
-            dataset: 'noveUmrti',
+			label: 'mrtvých [tis]',
+            dataset: 'deadTotal',
             yAxisID: 'right',
 		}];
-    createChart("canvas2", DISPLAY_N_DAYS, datasets2, leftRightYAxes);
+    createChart("chart-2-2", DISPLAY_N_DAYS, datasets22, thousandsLeftRightAxes);
 
-    var datasets3 = [ {
+     var datasets23 = [ {
 			label: 'smrtnost [%]',
-            dataset: 'smrtnostPct',
+            dataset: 'mortalityPct',
 		}];
-    createChart("canvas3", DISPLAY_N_DAYS, datasets3, leftYAxe);
+    createChart("chart-2-3", DISPLAY_N_DAYS, datasets23, simpleLeftAxe);
 
-    simulation.simDays.forEach(day => displayData(day));
+    simulation.simDayStats.forEach(day => displayData(day));
 }
 initialize();
 
