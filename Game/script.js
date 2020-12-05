@@ -42,6 +42,7 @@ function displayData(simDay) {
 	document.getElementById("datum").innerHTML = simDay.date;
 	document.getElementById("deadTotal").innerHTML = Math.round(simDay.deadTotal);
 	document.getElementById("deathsToday").innerHTML = Math.round(simDay.deathsToday);
+	document.getElementById("costTotal").innerHTML = simDay.costTotal/1e3;
 }
 
 function copyWithDefault(dict, defaults) {

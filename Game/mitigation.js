@@ -1,47 +1,67 @@
-let rouskyUcinnost = 0.3;
-let rozetupyUcinnost = 0.23;
-let skolyUcinnost = 0.08;
-let restauraceUcinnost = 0.1;
-let baryUcinnost = 0.12;
-let akceUcinnost = 0.12;
-let akceZrusUcinnost = 0.2;
-let zahraniciUcinnost = 0.07;
+var mitigations = [];
+let costScaler = 3;
+addMitigation("faceMasks",   0.30, 10 * costScaler, "Roušky");
+addMitigation("distancing",  0.23, 15 * costScaler, "Rozestupy");
+addMitigation("schools",     0.08, 50 * costScaler, "Zavřít školy");
+addMitigation("restaurants", 0.10, 25 * costScaler, "Zavřít restaurace");
+addMitigation("bars",        0.12, 20 * costScaler, "Zavřít bary");
+addMitigation("travel",      0.07, 30 * costScaler, "Zavřít hranice");
+addMitigation("eventsSome",  0.12, 20 * costScaler, "Omezení akcí");
+addMitigation("eventsAll",   0.20, 30 * costScaler, "Zrušit akce");
+
+// Special checkbox to close everything
+addMitigation("lockdown",   0.00,  0, "LOCKDOWN");
 
 
-function getMitigationMult() {
-    let mitigationMult = 1.0;
+function addMitigation(id, effectivity, costMPerDay, label) {
+    mitigations.push({
+        id: id,
+        label: label,
+        eff: effectivity,
+        cost: costMPerDay
+    });
+}
 
-	if (document.getElementById("lockdown").checked) {
-		document.getElementById("rousky").checked = document.getElementById("rozestupy").checked = document.getElementById("skoly").checked =
-			document.getElementById("restaurace").checked = document.getElementById("bary").checked = document.getElementById("akceZrus").checked =
-			document.getElementById("akce").checked = document.getElementById("zahranici").checked = true;
-	}
+let checkboxesHtml = ""
+checkboxesElement = document.getElementById('checkboxes');
 
-	if (document.getElementById("rousky").checked) {
-		mitigationMult *= (1 - rouskyUcinnost);
-	}
-	if (document.getElementById("rozestupy").checked) {
-		mitigationMult *= (1 - rozetupyUcinnost);
-	}
-	if (document.getElementById("skoly").checked) {
-		mitigationMult *= (1 - skolyUcinnost);
-	}
-	if (document.getElementById("restaurace").checked) {
-		mitigationMult *= (1 - restauraceUcinnost);
-	}
-	if (document.getElementById("bary").checked) {
-		mitigationMult *= (1 - baryUcinnost);
-	}
-	if (document.getElementById("akceZrus").checked) {
-		mitigationMult *= (1 - akceZrusUcinnost);
-		document.getElementById("akce").checked = false;
-	}
-	if (document.getElementById("akce").checked) {
-		mitigationMult *= (1 - akceUcinnost);
-	}
-	if (document.getElementById("zahranici").checked) {
-		mitigationMult *= (1 - zahraniciUcinnost);
-	}
+mitigations.forEach( mitigation =>
+    checkboxesHtml += `<label for="${mitigation.id}">\n\
+    <input type="checkbox" name="${mitigation.id}" id="${mitigation.id}" onchange="mitigationCheckboxOnChange(this.id)"> \n\
+    ${mitigation.label}\n\
+</label>`
+);
 
-    return mitigationMult;
+checkboxesElement.innerHTML = checkboxesHtml + checkboxesElement.innerHTML;
+
+function mitigationCheckboxOnChange(id) {
+    if (id != "lockdown") {
+        document.getElementById("lockdown").checked = false;
+    }
+
+    if (!document.getElementById(id).checked) {
+        return;
+    }
+
+    if (id == "lockdown") {
+        mitigations.forEach( mitigation => document.getElementById(mitigation.id).checked = true);
+        document.getElementById("eventsSome").checked = false;
+    }
+
+    if (id == "eventsAll") document.getElementById("eventsSome").checked = false;
+    if (id == "eventsSome") document.getElementById("eventsAll").checked = false;
+}
+
+function getMitigation() {
+    let mult = 1.0;
+    let cost = 0;
+
+    mitigations.forEach( mitigation => {
+	    if (document.getElementById(mitigation.id).checked) {
+		    mult *= (1 - mitigation.eff);
+            cost += mitigation.cost;
+	    }
+    });
+
+    return {mult: mult, cost: cost};
 }

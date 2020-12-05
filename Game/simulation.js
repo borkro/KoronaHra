@@ -26,7 +26,8 @@ class CovidSimulation {
             recovered: 0,
             dead: 0,
             infectedToday: this.infectedStart,
-            deathsToday: 0
+            deathsToday: 0,
+            costToday: 0,
         });
 
         this.calcStats();
@@ -45,7 +46,8 @@ class CovidSimulation {
                 recovered: 0,
                 dead: 0,
                 infectedToday: 0,
-                deathsToday: 0
+                deathsToday: 0,
+                costToday: 0,
             };
         }
     }
@@ -60,13 +62,16 @@ class CovidSimulation {
         let recovered = yesterday.recovered;
         let dead = yesterday.dead;
 
+        let mitigation = getMitigation();
+        let R = this.R0 * mitigation.mult;
+
         let population = yesterday.suspectible + yesterday.infected + yesterday.recovered;
         let infectious = 0.;
         for (let i = this.infectiousFrom; i <= this.infectiousTo; ++i) {
             infectious += this.getDayInPast(i).infectedToday;
         }
         infectious /= (this.infectiousTo - this.infectiousFrom + 1);
-        let infectedToday = infectious * this.R0 * getMitigationMult() * yesterday.suspectible / population;
+        let infectedToday = infectious * R * yesterday.suspectible / population;
         infected += infectedToday;
         suspectible -= infectedToday;
 
@@ -89,7 +94,9 @@ class CovidSimulation {
             recovered: recovered,
             dead: dead,
             infectedToday: infectedToday,
-            deathsToday: deathsToday
+            deathsToday: deathsToday,
+            costToday: mitigation.cost,
+            R: R,
         });
 
         return this.calcStats();
@@ -109,6 +116,8 @@ class CovidSimulation {
         let detectedInfectionsTotal = ((lastStat != null) ? lastStat.detectedInfectionsTotal : 0)
                 + detectedInfectionsToday;
 
+        let costTotal = ((lastStat != null) ? lastStat.costTotal : 0) + today.costToday;
+
         let stats = {
             date: today.date,
             deadTotal: today.dead,
@@ -117,6 +126,7 @@ class CovidSimulation {
             detectedInfectionsTotal: detectedInfectionsTotal,
             detectedActiveInfectionsTotal: today.infected - undetectedInfections,
             mortalityPct: 100. * today.dead / detectedInfectionsTotal,
+            costTotal: costTotal,
         };
 
         this.simDayStats.push(stats);
