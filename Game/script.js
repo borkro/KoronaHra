@@ -65,8 +65,8 @@ function createChart(canvasId, maxDays, datasets, yAxes) {
 			lineTension: 0.4
 	};
     let colorDefault = [
-	    'rgba(255,   0,   0, .7)',
 	    'rgba(  0,   0, 255, .7)',
+	    'rgba(255,   0,   0, .7)',
 	    'rgba(  0, 255,   0, .7)',
     ];
 
