@@ -8,6 +8,9 @@ class CovidSimulation {
         this.mortality = 0.012;
         this.initialPopulation = 10690000;
         this.infectedStart = 3;
+        this.vaccinationStartDate = '2021-03-01';
+        this.vaccinationPerDay = 0.01;
+        this.vaccinationMaxRate = 0.75;
 
         // All covid parameters counted from the infection day
         this.incubationDays = 5; // Days until infection is detected
@@ -30,6 +33,7 @@ class CovidSimulation {
             deathsToday: 0,
             costToday: 0,
             R: this.R0,
+            vaccinationRate: 0,
         });
 
         this.calcStats();
@@ -51,12 +55,15 @@ class CovidSimulation {
                 deathsToday: 0,
                 costToday: 0,
                 R: this.R0,
+                vaccinationRate: 0,
             };
         }
     }
 
     simOneDay() {
         let yesterday = this.getDayInPast(1);
+        let todayDate = plusDay(yesterday.date);
+
         let mRate = this.mortality;       // mortality rate
         let sRate = 1. - this.mortality;  // survival rate
 
@@ -74,7 +81,9 @@ class CovidSimulation {
             infectious += this.getDayInPast(i).infectedToday;
         }
         infectious /= (this.infectiousTo - this.infectiousFrom + 1);
-        let infectedToday = infectious * R * yesterday.suspectible / population;
+        // Simplifying assumption that only uninfected people got vaccinated
+        let suspectibleToday = Math.max(0, yesterday.suspectible - population * yesterday.vaccinationRate);
+        let infectedToday = infectious * R * suspectibleToday / population;
         infected += infectedToday;
         suspectible -= infectedToday;
 
@@ -90,8 +99,13 @@ class CovidSimulation {
         suspectible += endedImmunityToday;
         recovered -= endedImmunityToday;
 
+        let vaccinationRate = yesterday.vaccinationRate;
+        if (todayDate >= this.vaccinationStartDate) {
+            vaccinationRate = Math.min(vaccinationRate + this.vaccinationPerDay, this.vaccinationMaxRate);
+        }
+
         this.simDays.push({
-            date: plusDay(yesterday.date),
+            date: todayDate,
             suspectible: suspectible,
             infected: infected,
             recovered: recovered,
@@ -100,6 +114,7 @@ class CovidSimulation {
             deathsToday: deathsToday,
             costToday: mitigation.cost,
             R: R,
+            vaccinationRate: vaccinationRate,
         });
 
         return this.calcStats();
@@ -130,6 +145,7 @@ class CovidSimulation {
             detectedActiveInfectionsTotal: today.infected - undetectedInfections,
             mortalityPct: 100. * today.dead / detectedInfectionsTotal,
             costTotal: costTotal,
+            vaccinationRate: today.vaccinationRate,
         };
 
         this.simDayStats.push(stats);
