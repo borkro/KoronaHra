@@ -40,9 +40,9 @@ function displayData(simDay) {
     });
 
 	document.getElementById("datum").innerHTML = simDay.date;
-	document.getElementById("deadTotal").innerHTML = Math.round(simDay.deadTotal);
-	document.getElementById("deathsToday").innerHTML = Math.round(simDay.deathsToday);
-	document.getElementById("costTotal").innerHTML = simDay.costTotal/1e3;
+	document.getElementById("deadTotal").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deadTotal), 0);
+	document.getElementById("deathsToday").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deathsToday), 0);
+	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal/1e3, 1);
 }
 
 function copyWithDefault(dict, defaults) {
@@ -124,29 +124,6 @@ function createChart(canvasId, maxDays, datasets, yAxes) {
         addDataDisplay(datasets[i].dataset, chart.data.datasets[i], maxDays);
     }
     charts.push(chart);
-}
-
-function formatWithThousandsSeparator(value, dec) {
-    if (value < 0) {
-        return "-" + formatWithThousandsSeparator(-value, dec);
-    }
-
-    let v = Math.floor(value);
-    let ret = "0";
-    // whole number part
-    if (v < 1000) {
-        ret = v.toString();
-    } else {
-        let a = (v % 1000 + 1000).toString().slice(1);
-        ret = formatWithThousandsSeparator(v / 1000, 0) + "," + a;
-    }
-
-    if (dec > 0) {
-        let frac = Math.floor((1 + value - v) * Math.pow(10, dec)).toString().slice(1);
-        ret = ret + "." + frac;
-    }
-
-    return ret;
 }
 
 function initialize() {
