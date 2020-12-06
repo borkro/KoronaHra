@@ -4,6 +4,7 @@ class CovidSimulation {
     constructor(startDate) {
         // pandemic params
         this.R0 = 2.5;
+        this.rSmoothing = 0.85;
         this.mortality = 0.012;
         this.initialPopulation = 10690000;
         this.infectedStart = 3;
@@ -28,6 +29,7 @@ class CovidSimulation {
             infectedToday: this.infectedStart,
             deathsToday: 0,
             costToday: 0,
+            R: this.R0,
         });
 
         this.calcStats();
@@ -48,6 +50,7 @@ class CovidSimulation {
                 infectedToday: 0,
                 deathsToday: 0,
                 costToday: 0,
+                R: this.R0,
             };
         }
     }
@@ -63,7 +66,7 @@ class CovidSimulation {
         let dead = yesterday.dead;
 
         let mitigation = getMitigation();
-        let R = this.R0 * mitigation.mult;
+        let R = this.rSmoothing * yesterday.R + (1. - this.rSmoothing) * (this.R0 * mitigation.mult);
 
         let population = yesterday.suspectible + yesterday.infected + yesterday.recovered;
         let infectious = 0.;
