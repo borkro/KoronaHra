@@ -17,62 +17,64 @@
 		<button id="upozorneniBtn" onclick="hideUpozorneni()">OK</button></p>
 
 	<div id="chart-row-1">
-        <div id="chart-1-1-container">
-	        <canvas id="chart-1-1" height="100%"></canvas>
-        </div>
-    </div>
+		<div id="chart-1-1-container">
+			<canvas id="chart-1-1" height="100%"></canvas>
+		</div>
+	</div>
 	<div id="chart-row-2">
-        <div id="chart-2-1-container">
-	        <canvas id="chart-2-1" height="200%"></canvas>
-        </div>
-        <div id="chart-2-2-container">
-	        <canvas id="chart-2-2" height="200%"></canvas>
-        </div>
-        <div id="chart-2-3-container">
-	        <canvas id="chart-2-3" height="200%"></canvas>
-        </div>
+		<div id="chart-2-1-container">
+			<canvas id="chart-2-1" height="200%"></canvas>
+		</div>
+		<div id="chart-2-2-container">
+			<canvas id="chart-2-2" height="200%"></canvas>
+		</div>
+		<div id="chart-2-3-container">
+			<canvas id="chart-2-3" height="200%"></canvas>
+		</div>
 	</div>
 
 
 	<div id="playground">
-        <table id="mitigation">
-            <tr>
-                <td width="12%">
-                    <input type="radio" name="pes" id="pes-0" checked="checked">
-                    <label for="pes-0" id="pes-1-label">PES-0</label>
-                </td>
-                <td>
-                    Otevřít vše
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="radio" name="pes" id="pes-1">
-                    <label for="pes-1" id="pes-1-label">PES-1</label>
-                </td>
-                <td>
-    		        <div id="pes-1-checkboxes"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="radio" name="pes" id="pes-2">
-                    <label for="pes-2" id="pes-2-label">PES-2</label>
-                </td>
-                <td>
-    		        <div id="pes-2-checkboxes"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="radio" name="pes" id="pes-3">
-                    <label for="pes-2" id="pes-3-label">PES-3</label>
-                </td>
-                <td>
-    		        <label class="lockdown">LOCKDOWN</label>
-                </td>
-            </tr>
-        </table>
+		<table id="mitigation">
+			<tbody>
+				<tr class="mitigation-tr">
+					<td width="12%">
+						<input type="radio" name="pes" id="pes-0" checked="checked">
+						<label for="pes-0" id="pes-1-label">PES-0</label>
+					</td>
+					<td>
+						Otevřít vše
+					</td>
+				</tr>
+				<tr class="mitigation-tr">
+					<td>
+						<input type="radio" name="pes" id="pes-1">
+						<label for="pes-1" id="pes-1-label">PES-1</label>
+					</td>
+					<td>
+						<div id="pes-1-checkboxes"></div>
+					</td>
+				</tr>
+				<tr class="mitigation-tr">
+					<td>
+						<input type="radio" name="pes" id="pes-2">
+						<label for="pes-2" id="pes-2-label">PES-2</label>
+					</td>
+					<td>
+						<div id="pes-2-checkboxes"></div>
+					</td>
+				</tr>
+				<tr class="mitigation-tr">
+					<td>
+						<input type="radio" name="pes" id="pes-3">
+						<label for="pes-2" id="pes-3-label">PES-3</label>
+					</td>
+					<td>
+						<label class="lockdown">LOCKDOWN</label>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
 		<div id="btn">
 			<button title="play" id="play" onclick="playBool = !playBool, play()"></button>
