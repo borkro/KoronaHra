@@ -61,8 +61,9 @@ a:hover {
 	padding-right: .7em;
 }
 
-#chart-row-1, #chart-row-2 {
-    height: 100%;
+#chart-row-1,
+#chart-row-2 {
+	height: 100%;
 	width: 100%;
 }
 
@@ -70,9 +71,11 @@ a:hover {
 	width: 100%;
 }
 
-#chart-2-1-container, #chart-2-2-container, #chart-2-3-container {
+#chart-2-1-container,
+#chart-2-2-container,
+#chart-2-3-container {
 	width: 33.3%;
-    float: left;
+	float: left;
 }
 
 #btn {
@@ -100,8 +103,8 @@ a:hover {
 }
 
 #mitigation td {
-    vertical-align: top;
-    text-align: left;
+	vertical-align: top;
+	text-align: left;
 }
 
 .pes-row-unselected {
@@ -153,4 +156,8 @@ a:hover {
 	content: "";
 	display: table;
 	clear: both;
+}
+
+tbody {
+	border: 1px solid black;
 }
