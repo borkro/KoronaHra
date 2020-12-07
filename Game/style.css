@@ -6,6 +6,7 @@
 	--white: #f5f5f5;
 	--orange: #f74e13;
 	--blue: #0dafdd;
+	--light-blue: #add8e6;
 	--green: #0dac60;
 	--red: #f51319;
 	--gray: #3f3f3f;
@@ -98,6 +99,7 @@ a:hover {
 #mitigation {
 	width: 66.7%;
 	float: left;
+    border-collapse: collapse;
 }
 
 #mitigation td {
@@ -105,8 +107,14 @@ a:hover {
 	text-align: left;
 }
 
-#pes-1-checkboxes,
-#pes-2-checkboxes {
+.pes-row-unselected {
+}
+
+.pes-row-selected {
+    background-color: var(--light-blue);
+}
+
+#pes-1-checkboxes, #pes-2-checkboxes {
 	line-break: auto;
 	text-align: left;
 	line-break: auto;

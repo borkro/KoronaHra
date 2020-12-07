@@ -40,9 +40,10 @@ function displayData(simDay) {
 	});
 
 	document.getElementById("datum").innerHTML = simDay.date;
-	document.getElementById("deadTotal").innerHTML = Math.round(simDay.deadTotal);
-	document.getElementById("deathsToday").innerHTML = Math.round(simDay.deathsToday);
-	document.getElementById("costTotal").innerHTML = simDay.costTotal / 1e3;
+	document.getElementById("vaccinationRate").innerHTML = formatWithThousandsSeparator(100 * simDay.vaccinationRate, 0);
+	document.getElementById("deadTotal").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deadTotal), 0);
+	document.getElementById("deathsToday").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deathsToday), 0);
+	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal/1e3, 1);
 }
 
 function copyWithDefault(dict, defaults) {
