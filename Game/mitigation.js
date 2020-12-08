@@ -1,16 +1,20 @@
-var mitigations = [];
-let costScaler = 3;
-addMitigation("faceMasks", 0.30, 10 * costScaler, "Roušky");
-addMitigation("distancing", 0.23, 15 * costScaler, "Rozestupy");
-addMitigation("schools", 0.08, 50 * costScaler, "Zavřít školy");
-addMitigation("restaurants", 0.10, 25 * costScaler, "Restaurace");
-addMitigation("bars", 0.12, 20 * costScaler, "Zavřít bary");
-addMitigation("travel", 0.07, 30 * costScaler, "Zavřít hranice");
-addMitigation("eventsSome", 0.12, 20 * costScaler, "Omezení akcí");
-addMitigation("eventsAll", 0.20, 30 * costScaler, "Zrušit akce");
+var mitigations;
 
-// Special checkbox to close everything
-// addMitigation("lockdown",   0.00,  0, "LOCKDOWN");
+function randomizeMitigations() {
+	mitigations = []
+
+	let es = normalPositiveSampler(1, 0.2); // Efficiency scaler
+	let cs = normalPositiveSampler(1, 0.2); // Cost scaler
+	
+	addMitigation("faceMasks",		0.30 * es(), 10 * cs(), "Roušky");
+	addMitigation("distancing",		0.23 * es(), 15 * cs(), "Rozestupy");
+	addMitigation("schools",		0.08 * es(), 50 * cs(), "Zavřít školy");
+	addMitigation("restaurants",	0.10 * es(), 25 * cs(), "Restaurace");
+	addMitigation("bars",			0.12 * es(), 20 * cs(), "Zavřít bary");
+	addMitigation("travel",			0.07 * es(), 30 * cs(), "Zavřít hranice");
+	addMitigation("eventsSome",		0.12 * es(), 20 * cs(), "Omezení akcí");
+	addMitigation("eventsAll",		0.20 * es(), 30 * cs(), "Zrušit akce");
+}
 
 let defaultMitigationPes1 = ["faceMasks", "distancing"];
 let defaultMitigationPes2 = ["faceMasks", "distancing", "bars", "restaurants", "eventsSome"];
@@ -30,6 +34,8 @@ function addMitigation(id, effectivity, costMPerDay, label) {
 }
 
 function initMitigation() {
+	randomizeMitigations();
+
 	for (let i = 1; i < 3; i++) {
 		let checkboxesHtml = ""
 		checkboxesElement = document.getElementById('checkboxes');

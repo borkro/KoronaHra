@@ -27,6 +27,10 @@ function formatWithThousandsSeparator(value, dec) {
     const THOUSANDS_SEPARATOR = " ";
     const DECIMAL_SEPARATOR = ",";
 
+	if (!isFinite(value)) {
+		return value.toString();
+	}
+
     if (value < 0) {
         return "-" + formatWithThousandsSeparator(-value, dec);
     }
@@ -48,4 +52,24 @@ function formatWithThousandsSeparator(value, dec) {
 
     return ret;
 }
+
+// Normal distribution according to https://stackoverflow.com/a/36481059
+function randn() {
+	var u = 0, v = 0;
+	while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+	while(v === 0) v = Math.random();
+	return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+}
+
+// Create a function sampling from a normal distribution
+function normalSampler(mean, variance) {
+	return () => randn() * variance + mean;
+}
+
+// Create a function sampling positive values from a normal distribution
+function normalPositiveSampler(mean, variance) {
+	let sample = normalSampler(mean, variance);
+	return () => {x = sample(); while(x <= 0) x = sample(); return x; };
+}
+
 

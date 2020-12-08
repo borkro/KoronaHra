@@ -134,29 +134,6 @@ function createChart(canvasId, maxDays, datasets, yAxes) {
 	charts.push(chart);
 }
 
-function formatWithThousandsSeparator(value, dec) {
-	if (value < 0) {
-		return "-" + formatWithThousandsSeparator(-value, dec);
-	}
-
-	let v = Math.floor(value);
-	let ret = "0";
-	// whole number part
-	if (v < 1000) {
-		ret = v.toString();
-	} else {
-		let a = (v % 1000 + 1000).toString().slice(1);
-		ret = formatWithThousandsSeparator(v / 1000, 0) + "," + a;
-	}
-
-	if (dec > 0) {
-		let frac = Math.floor((1 + value - v) * Math.pow(10, dec)).toString().slice(1);
-		ret = ret + "." + frac;
-	}
-
-	return ret;
-}
-
 function initialize() {
 	simulation = new CovidSimulation("2020-03-01");
 

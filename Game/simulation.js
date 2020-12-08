@@ -4,8 +4,9 @@ class CovidSimulation {
 	constructor(startDate) {
 		// pandemic params
 		this.R0 = 2.5;
+		this.RNoiseMultSampler = normalPositiveSampler(1.0, 0.15);
 		this.rSmoothing = 0.85;
-		this.mortality = 0.012;
+		this.mortalitySampler = normalPositiveSampler(0.01, 0.001);
 		this.initialPopulation = 10690000;
 		this.infectedStart = 3;
 		this.vaccinationStartDate = '2021-03-01';
@@ -33,6 +34,7 @@ class CovidSimulation {
 			deathsToday: 0,
 			costToday: 0,
 			R: this.R0,
+			mortality: this.mortalitySampler(),
 			vaccinationRate: 0,
 		});
 
@@ -55,6 +57,7 @@ class CovidSimulation {
 				deathsToday: 0,
 				costToday: 0,
 				R: this.R0,
+				mortality: 0,
 				vaccinationRate: 0,
 			};
 		}
@@ -63,9 +66,6 @@ class CovidSimulation {
 	simOneDay() {
 		let yesterday = this.getDayInPast(1);
 		let todayDate = plusDay(yesterday.date);
-
-		let mRate = this.mortality;       // mortality rate
-		let sRate = 1. - this.mortality;  // survival rate
 
 		let suspectible = yesterday.suspectible;
 		let infected = yesterday.infected;
@@ -83,19 +83,22 @@ class CovidSimulation {
 		infectious /= (this.infectiousTo - this.infectiousFrom + 1);
 		// Simplifying assumption that only uninfected people got vaccinated
 		let suspectibleToday = Math.max(0, yesterday.suspectible - population * yesterday.vaccinationRate);
-		let infectedToday = Math.round(infectious * R * suspectibleToday / population);
+		let infectedToday = Math.round(infectious * this.RNoiseMultSampler() * R * suspectibleToday / population);
 		infected += infectedToday;
 		suspectible -= infectedToday;
 
-		let recoveredToday = Math.round(this.getDayInPast(this.recoveryDays).infectedToday * sRate);
+		let recoveryFromDay = this.getDayInPast(this.recoveryDays);
+		let recoveredToday = Math.round(recoveryFromDay.infectedToday * (1 - recoveryFromDay.mortality));
 		recovered += recoveredToday;
 		infected -= recoveredToday;
 
-		let deathsToday = Math.round(this.getDayInPast(this.timeToDeathDays).infectedToday * mRate);
+		let deathsFromDay = this.getDayInPast(this.timeToDeathDays);
+		let deathsToday = Math.round(deathsFromDay.infectedToday * deathsFromDay.mortality);
 		dead += deathsToday;
 		infected -= deathsToday;
 
-		let endedImmunityToday = Math.round(this.getDayInPast(this.immunityDays).infectedToday * sRate);
+		let endedImmunityFromDay = this.getDayInPast(this.immunityDays);
+		let endedImmunityToday = Math.round(endedImmunityFromDay.infectedToday * (1 - endedImmunityFromDay.mortality));
 		suspectible += endedImmunityToday;
 		recovered -= endedImmunityToday;
 
@@ -114,6 +117,7 @@ class CovidSimulation {
 			deathsToday: deathsToday,
 			costToday: mitigation.cost,
 			R: R,
+			mortality: this.mortalitySampler(),
 			vaccinationRate: vaccinationRate,
 		});
 
