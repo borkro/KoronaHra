@@ -63,7 +63,7 @@ function createChart(canvasId, maxDays, datasets, yAxes) {
 	let datasetDefault = {
 		data: [],
 		borderWidth: 2,
-		lineTension: 0.4
+		lineTension: 0.0
 	};
 	let colorDefault = [
 		'rgba(  0,   0, 255, .7)',
@@ -179,12 +179,10 @@ function initialize() {
 		label: 'nově nakažených [tis]',
 		dataset: 'detectedInfectionsToday',
 		yAxisID: 'left',
-		lineTension: 0
 	}, {
 		label: 'nových mrtvých [tis]',
 		dataset: 'deathsToday',
 		yAxisID: 'right',
-		lineTension: 0
 	}];
 	createChart("chart-1-1", DISPLAY_N_DAYS, datasets11, thousandsLeftRightAxes);
 
@@ -192,7 +190,6 @@ function initialize() {
 		label: 'aktuálně nakažených [tis]',
 		dataset: 'detectedActiveInfectionsTotal',
 		yAxisID: 'left',
-		lineTension: 0
 	}];
 	createChart("chart-2-1", DISPLAY_N_DAYS, datasets21, thousandsLeftAxe);
 
@@ -200,19 +197,16 @@ function initialize() {
 		label: 'nakažených [tis]',
 		dataset: 'detectedInfectionsTotal',
 		yAxisID: 'left',
-		lineTension: 0
 	}, {
 		label: 'mrtvých [tis]',
 		dataset: 'deadTotal',
 		yAxisID: 'right',
-		lineTension: 0
 	}];
 	createChart("chart-2-2", DISPLAY_N_DAYS, datasets22, thousandsLeftRightAxes);
 
 	var datasets23 = [{
 		label: 'smrtnost [%]',
 		dataset: 'mortalityPct',
-		lineTension: 0
 	}];
 	createChart("chart-2-3", DISPLAY_N_DAYS, datasets23, simpleLeftAxe);
 
