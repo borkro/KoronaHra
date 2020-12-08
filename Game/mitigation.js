@@ -58,16 +58,16 @@ function initMitigation() {
 
 
 function pesLevelOnChange(id) {
-    for(let i = 0; i <= 3; i++) {
-        let level = `pes-${i}`;
-        let cls = null;
-        if (level == id) {
-            cls = "pes-row-selected";
-        } else {
-            cls = "pes-row-unselected";
-        }
-        document.getElementById(level + "-row").className = cls;
-    }
+	for(let i = 0; i <= 3; i++) {
+		let level = `pes-${i}`;
+		let cls = null;
+		if (level == id) {
+			cls = "pes-row-selected";
+		} else {
+			cls = "pes-row-unselected";
+		}
+		document.getElementById(level + "-row").className = cls;
+	}
 }
 
 function mitigationCheckboxOnChange(id) {
