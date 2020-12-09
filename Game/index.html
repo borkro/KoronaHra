@@ -35,44 +35,44 @@
 
 
 	<div id="playground">
-        <table id="mitigation">
-            <tr id="pes-0-row" class="pes-row-selected">
-                <td width="12%">
-                    <input type="radio" name="pes" id="pes-0" onchange="pesLevelOnChange(this.id)" checked="checked">
-                    <label for="pes-0" id="pes-1-label">PES-0</label>
-                </td>
-                <td>
-                    Otevřít vše
-                </td>
-            </tr>
-            <tr id="pes-1-row" class="pes-row-unselected">
-                <td>
-                    <input type="radio" name="pes" id="pes-1" onchange="pesLevelOnChange(this.id)">
-                    <label for="pes-1" id="pes-1-label">PES-1</label>
-                </td>
-                <td>
-    		        <div id="pes-1-checkboxes"></div>
-                </td>
-            </tr>
-            <tr id="pes-2-row" class="pes-row-unselected">
-                <td>
-                    <input type="radio" name="pes" id="pes-2" onchange="pesLevelOnChange(this.id)">
-                    <label for="pes-2" id="pes-2-label">PES-2</label>
-                </td>
-                <td>
-    		        <div id="pes-2-checkboxes"></div>
-                </td>
-            </tr>
-            <tr id="pes-3-row" class="pes-row-unselected">
-                <td>
-                    <input type="radio" name="pes" id="pes-3" onchange="pesLevelOnChange(this.id)">
-                    <label for="pes-3" id="pes-3-label">PES-3</label>
-                </td>
-                <td>
-    		        <label class="lockdown">LOCKDOWN</label>
-                </td>
-            </tr>
-        </table>
+		<table id="mitigation">
+			<tr id="pes-0-row" class="pes-row-selected">
+				<td width="12%">
+					<input type="radio" name="pes" id="pes-0" onchange="pesLevelOnChange(this.id)" checked="checked">
+					<label for="pes-0" id="pes-1-label">PES-0</label>
+				</td>
+				<td>
+					Otevřít vše
+				</td>
+			</tr>
+			<tr id="pes-1-row" class="pes-row-unselected">
+				<td>
+					<input type="radio" name="pes" id="pes-1" onchange="pesLevelOnChange(this.id)">
+					<label for="pes-1" id="pes-1-label">PES-1</label>
+				</td>
+				<td>
+					<div id="pes-1-checkboxes"></div>
+				</td>
+			</tr>
+			<tr id="pes-2-row" class="pes-row-unselected">
+				<td>
+					<input type="radio" name="pes" id="pes-2" onchange="pesLevelOnChange(this.id)">
+					<label for="pes-2" id="pes-2-label">PES-2</label>
+				</td>
+				<td>
+					<div id="pes-2-checkboxes"></div>
+				</td>
+			</tr>
+			<tr id="pes-3-row" class="pes-row-unselected">
+				<td>
+					<input type="radio" name="pes" id="pes-3" onchange="pesLevelOnChange(this.id)">
+					<label for="pes-3" id="pes-3-label">PES-3</label>
+				</td>
+				<td>
+					<label class="lockdown">LOCKDOWN</label>
+				</td>
+			</tr>
+		</table>
 
 		<div id="btn">
 			<button title="play" id="play" onclick="playBool = !playBool, play()"></button>
@@ -83,6 +83,7 @@
 			<p>Vakcinace: <span id="vaccinationRate"></span>%</p>
 			<p>Počet úmrtí dnes: <span id="deathsToday"></span></p>
 			<p>Počet úmrtí: <span id="deadTotal"></span></p>
+			<p>Smrtnost: <span id="mortality"></span>%</p>
 			<p>Náklady: <span id="costTotal"></span> mld. Kč</p>
 		</div>
 	</div>

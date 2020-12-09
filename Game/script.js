@@ -43,6 +43,7 @@ function displayData(simDay) {
 	document.getElementById("vaccinationRate").innerHTML = formatWithThousandsSeparator(100 * simDay.vaccinationRate, 0);
 	document.getElementById("deadTotal").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deadTotal), 0);
 	document.getElementById("deathsToday").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deathsToday), 0);
+	document.getElementById("mortality").innerHTML = formatWithThousandsSeparator(simDay.mortalityPct, 2);
 	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal / 1e3, 1);
 }
 
@@ -63,7 +64,7 @@ function createChart(canvasId, maxDays, datasets, yAxes) {
 	let datasetDefault = {
 		data: [],
 		borderWidth: 2,
-		lineTension: 0.4
+		lineTension: 0.0
 	};
 	let colorDefault = [
 		'rgba(  0,   0, 255, .7)',
@@ -134,29 +135,6 @@ function createChart(canvasId, maxDays, datasets, yAxes) {
 	charts.push(chart);
 }
 
-function formatWithThousandsSeparator(value, dec) {
-	if (value < 0) {
-		return "-" + formatWithThousandsSeparator(-value, dec);
-	}
-
-	let v = Math.floor(value);
-	let ret = "0";
-	// whole number part
-	if (v < 1000) {
-		ret = v.toString();
-	} else {
-		let a = (v % 1000 + 1000).toString().slice(1);
-		ret = formatWithThousandsSeparator(v / 1000, 0) + "," + a;
-	}
-
-	if (dec > 0) {
-		let frac = Math.floor((1 + value - v) * Math.pow(10, dec)).toString().slice(1);
-		ret = ret + "." + frac;
-	}
-
-	return ret;
-}
-
 function initialize() {
 	simulation = new CovidSimulation("2020-03-01");
 
@@ -179,12 +157,10 @@ function initialize() {
 		label: 'nově nakažených [tis]',
 		dataset: 'detectedInfectionsToday',
 		yAxisID: 'left',
-		lineTension: 0
 	}, {
 		label: 'nových mrtvých [tis]',
 		dataset: 'deathsToday',
 		yAxisID: 'right',
-		lineTension: 0
 	}];
 	createChart("chart-1-1", DISPLAY_N_DAYS, datasets11, thousandsLeftRightAxes);
 
@@ -192,7 +168,6 @@ function initialize() {
 		label: 'aktuálně nakažených [tis]',
 		dataset: 'detectedActiveInfectionsTotal',
 		yAxisID: 'left',
-		lineTension: 0
 	}];
 	createChart("chart-2-1", DISPLAY_N_DAYS, datasets21, thousandsLeftAxe);
 
@@ -200,19 +175,16 @@ function initialize() {
 		label: 'nakažených [tis]',
 		dataset: 'detectedInfectionsTotal',
 		yAxisID: 'left',
-		lineTension: 0
 	}, {
 		label: 'mrtvých [tis]',
 		dataset: 'deadTotal',
 		yAxisID: 'right',
-		lineTension: 0
 	}];
 	createChart("chart-2-2", DISPLAY_N_DAYS, datasets22, thousandsLeftRightAxes);
 
 	var datasets23 = [{
-		label: 'smrtnost [%]',
-		dataset: 'mortalityPct',
-		lineTension: 0
+		label: 'kapacita nemocnic [%]',
+		dataset: 'hospitalizationCapacityPct',
 	}];
 	createChart("chart-2-3", DISPLAY_N_DAYS, datasets23, simpleLeftAxe);
 
