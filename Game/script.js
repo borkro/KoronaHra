@@ -43,6 +43,7 @@ function displayData(simDay) {
 	document.getElementById("vaccinationRate").innerHTML = formatWithThousandsSeparator(100 * simDay.vaccinationRate, 0);
 	document.getElementById("deadTotal").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deadTotal), 0);
 	document.getElementById("deathsToday").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deathsToday), 0);
+	document.getElementById("mortality").innerHTML = formatWithThousandsSeparator(simDay.mortalityPct, 2);
 	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal / 1e3, 1);
 }
 
@@ -182,8 +183,8 @@ function initialize() {
 	createChart("chart-2-2", DISPLAY_N_DAYS, datasets22, thousandsLeftRightAxes);
 
 	var datasets23 = [{
-		label: 'smrtnost [%]',
-		dataset: 'mortalityPct',
+		label: 'kapacita nemocnic [%]',
+		dataset: 'hospitalizationCapacityPct',
 	}];
 	createChart("chart-2-3", DISPLAY_N_DAYS, datasets23, simpleLeftAxe);
 

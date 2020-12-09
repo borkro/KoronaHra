@@ -20,6 +20,11 @@ class CovidSimulation {
 		this.recoveryDays = 14 + this.incubationDays;
 		this.timeToDeathDays = 21 + this.incubationDays;
 		this.immunityDays = 90 + this.recoveryDays;
+		this.hospitalizationDays = 21; // How long people stay in hospital after incubation
+		this.hospitalizationRateSampler = normalPositiveSampler(0.05, 0.01);
+		this.hospitalsOverwhelmedThreshold = 20000;
+		this.hospitalsOverwhelmedMortalityMultiplier = 2;
+		this.hospitalsBaselineUtilization = 0.5;
 
 		this.simDays = [];
 		this.simDayStats = [];
@@ -29,8 +34,10 @@ class CovidSimulation {
 			suspectible: this.initialPopulation - this.infectedStart,
 			infected: this.infectedStart,
 			recovered: 0,
+			hospitalized: 0,
 			dead: 0,
 			infectedToday: this.infectedStart,
+			hospitalizedToday: 0,
 			deathsToday: 0,
 			costToday: 0,
 			R: this.R0,
@@ -52,8 +59,10 @@ class CovidSimulation {
 				suspectible: this.initialPopulation,
 				infected: 0,
 				recovered: 0,
+				hospitalized: 0,
 				dead: 0,
 				infectedToday: 0,
+				hospitalizedToday: 0,
 				deathsToday: 0,
 				costToday: 0,
 				R: this.R0,
@@ -102,22 +111,32 @@ class CovidSimulation {
 		suspectible += endedImmunityToday;
 		recovered -= endedImmunityToday;
 
+		let hospitalizedToday = Math.round(this.getDayInPast(this.incubationDays).infectedToday * this.hospitalizationRateSampler());
+		let hospitalized = yesterday.hospitalized + hospitalizedToday
+								- this.getDayInPast(this.hospitalizationDays).hospitalizedToday;
+
 		let vaccinationRate = yesterday.vaccinationRate;
 		if (todayDate >= this.vaccinationStartDate) {
 			vaccinationRate = Math.min(vaccinationRate + this.vaccinationPerDay, this.vaccinationMaxRate);
 		}
 
+		let hospitalsOverwhelmedMultiplier = 1;
+		if (hospitalized > (1 - this.hospitalsBaselineUtilization) * this.hospitalsOverwhelmedThreshold) {
+			hospitalsOverwhelmedMultiplier = this.hospitalsOverwhelmedMortalityMultiplier;
+		}
 		this.simDays.push({
 			date: todayDate,
 			suspectible: suspectible,
 			infected: infected,
 			recovered: recovered,
+			hospitalized: hospitalized,
 			dead: dead,
 			infectedToday: infectedToday,
+			hospitalizedToday: hospitalizedToday,
 			deathsToday: deathsToday,
 			costToday: mitigation.cost,
 			R: R,
-			mortality: this.mortalitySampler(),
+			mortality: this.mortalitySampler() * hospitalsOverwhelmedMultiplier,
 			vaccinationRate: vaccinationRate,
 		});
 
@@ -150,6 +169,7 @@ class CovidSimulation {
 			mortalityPct: 100. * today.dead / detectedInfectionsTotal,
 			costTotal: costTotal,
 			vaccinationRate: today.vaccinationRate,
+			hospitalizationCapacityPct: 100. * (this.hospitalsBaselineUtilization + today.hospitalized / this.hospitalsOverwhelmedThreshold),
 		};
 
 		this.simDayStats.push(stats);
