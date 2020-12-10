@@ -99,7 +99,7 @@ a:hover {
 #mitigation {
 	width: 66.7%;
 	float: left;
-    border-collapse: collapse;
+	border-collapse: collapse;
 }
 
 #mitigation td {
@@ -107,14 +107,14 @@ a:hover {
 	text-align: left;
 }
 
-.pes-row-unselected {
-}
+.pes-row-unselected {}
 
 .pes-row-selected {
-    background-color: var(--light-blue);
+	background-color: var(--light-blue);
 }
 
-#pes-1-checkboxes, #pes-2-checkboxes {
+#pes-1-checkboxes,
+#pes-2-checkboxes {
 	line-break: auto;
 	text-align: left;
 	line-break: auto;
@@ -160,4 +160,60 @@ a:hover {
 
 tbody {
 	border: 1px solid black;
+}
+
+/* END OF GAME */
+
+#endOfGame {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	visibility: hidden;
+	top: 0;
+	left: 0;
+	background: rgba(0, 0, 0, .5);
+	z-index: 3;
+}
+
+#endTable {
+	height: 300px;
+	width: 450px;
+	border-radius: 20px;
+	background-color: var(--white);
+	color: var(--black);
+	margin: auto;
+	z-index: 15;
+	margin-top: 60px;
+	padding: 20px;
+}
+
+#endTable table {
+	width: 100%;
+	text-align: center;
+}
+
+#endTable table tr td {
+	width: 50%;
+}
+
+#endTable table tr td {
+	width: 50%;
+}
+
+#close-endOfGame {
+	cursor: pointer;
+	font-size: 30px;
+	margin-left: 410px;
+	margin-top: 5px;
+	color: var(--black);
+	z-index: 20;
+	transition: transform .25s, color .25s;
+	-webkit-transition: transform .25s, color .25s;
+	transition-timing-function: ease-in-out;
+	-webkit-transition-timing-function: ease-in-out;
+}
+
+#close-endOfGame:hover {
+	color: var(--red);
+	transform: rotate(90deg);
 }

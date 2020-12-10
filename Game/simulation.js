@@ -83,19 +83,19 @@ class CovidSimulation {
 		infectious /= (this.infectiousTo - this.infectiousFrom + 1);
 		// Simplifying assumption that only uninfected people got vaccinated
 		let suspectibleToday = Math.max(0, yesterday.suspectible - population * yesterday.vaccinationRate);
-		let infectedToday = Math.round(infectious * R * suspectibleToday / population);
+		let infectedToday = infectious * R * suspectibleToday / population;
 		infected += infectedToday;
 		suspectible -= infectedToday;
 
-		let recoveredToday = Math.round(this.getDayInPast(this.recoveryDays).infectedToday * sRate);
+		let recoveredToday = this.getDayInPast(this.recoveryDays).infectedToday * sRate;
 		recovered += recoveredToday;
 		infected -= recoveredToday;
 
-		let deathsToday = Math.round(this.getDayInPast(this.timeToDeathDays).infectedToday * mRate);
+		let deathsToday = this.getDayInPast(this.timeToDeathDays).infectedToday * mRate;
 		dead += deathsToday;
 		infected -= deathsToday;
 
-		let endedImmunityToday = Math.round(this.getDayInPast(this.immunityDays).infectedToday * sRate);
+		let endedImmunityToday = this.getDayInPast(this.immunityDays).infectedToday * sRate;
 		suspectible += endedImmunityToday;
 		recovered -= endedImmunityToday;
 

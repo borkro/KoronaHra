@@ -44,6 +44,11 @@ function displayData(simDay) {
 	document.getElementById("deadTotal").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deadTotal), 0);
 	document.getElementById("deathsToday").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deathsToday), 0);
 	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal / 1e3, 1);
+
+	// End of game
+	if (simDay.vaccinationRate == 1) {
+		end(simDay);
+	}
 }
 
 function copyWithDefault(dict, defaults) {
@@ -238,4 +243,17 @@ function play() {
 
 function hideUpozorneni() {
 	document.getElementById("upozorneni").style.display = "none";
+}
+
+function end(endDay) {
+	document.getElementById("datumEndOfGame").innerHTML = endDay.date;
+	document.getElementById("vaccinationRateEndOfGame").innerHTML = formatWithThousandsSeparator(100 * endDay.vaccinationRate, 0);
+	document.getElementById("deadTotalEndOfGame").innerHTML = formatWithThousandsSeparator(Math.round(endDay.deadTotal), 0);
+	document.getElementById("costTotalEndOfGame").innerHTML = formatWithThousandsSeparator(endDay.costTotal / 1e3, 1);
+	playBool = !playBool;
+	endOfGame(true);
+}
+
+function endOfGame(bool) {
+	document.getElementById("endOfGame").style.visibility = bool ? "visible" : "hidden";
 }
