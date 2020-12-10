@@ -24,28 +24,52 @@ function plusDay(datum) {
 }
 
 function formatWithThousandsSeparator(value, dec) {
-    const THOUSANDS_SEPARATOR = " ";
-    const DECIMAL_SEPARATOR = ",";
+	const THOUSANDS_SEPARATOR = " ";
+	const DECIMAL_SEPARATOR = ",";
 
-    if (value < 0) {
-        return "-" + formatWithThousandsSeparator(-value, dec);
-    }
+	if (!isFinite(value)) {
+		return value.toString();
+	}
 
-    let v = Math.floor(value);
-    let ret = "0";
-    // whole number part
-    if (v < 1000) {
-        ret = v.toString();
-    } else {
-        let a = (v % 1000 + 1000).toString().slice(1);
-        ret = formatWithThousandsSeparator(v / 1000, 0) + THOUSANDS_SEPARATOR + a;
-    }
+	if (value < 0) {
+		return "-" + formatWithThousandsSeparator(-value, dec);
+	}
 
-    if (dec > 0) {
-        let frac = Math.floor((1 + value - v) * Math.pow(10, dec)).toString().slice(1);
-        ret = ret + DECIMAL_SEPARATOR + frac;
-    }
+	let v = Math.floor(value);
+	let ret = "0";
+	// whole number part
+	if (v < 1000) {
+		ret = v.toString();
+	} else {
+		let a = (v % 1000 + 1000).toString().slice(1);
+		ret = formatWithThousandsSeparator(v / 1000, 0) + THOUSANDS_SEPARATOR + a;
+	}
 
-    return ret;
+	if (dec > 0) {
+		let frac = Math.floor((1 + value - v) * Math.pow(10, dec)).toString().slice(1);
+		ret = ret + DECIMAL_SEPARATOR + frac;
+	}
+
+	return ret;
 }
+
+// Normal distribution according to https://stackoverflow.com/a/36481059
+function randn() {
+	var u = 0, v = 0;
+	while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+	while(v === 0) v = Math.random();
+	return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+}
+
+// Create a function sampling from a normal distribution
+function normalSampler(mean, variance) {
+	return () => randn() * variance + mean;
+}
+
+// Create a function sampling positive values from a normal distribution
+function normalPositiveSampler(mean, variance) {
+	let sample = normalSampler(mean, variance);
+	return () => {x = sample(); while(x <= 0) x = sample(); return x; };
+}
+
 
