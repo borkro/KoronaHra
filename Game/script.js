@@ -221,6 +221,7 @@ function end(endDay) {
 	document.getElementById("datumEndOfGame").innerHTML = endDay.date;
 	document.getElementById("vaccinationRateEndOfGame").innerHTML = formatWithThousandsSeparator(100 * endDay.vaccinationRate, 0);
 	document.getElementById("deadTotalEndOfGame").innerHTML = formatWithThousandsSeparator(Math.round(endDay.deadTotal), 0);
+	document.getElementById("mortalityEndOfGame").innerHTML = formatWithThousandsSeparator(endDay.mortalityPct, 2);
 	document.getElementById("costTotalEndOfGame").innerHTML = formatWithThousandsSeparator(endDay.costTotal / 1e3, 1);
 	playBool = !playBool;
 	endOfGame(true);
