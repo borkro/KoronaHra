@@ -47,7 +47,7 @@ function displayData(simDay) {
 	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal / 1e3, 1);
 
 	// End of game
-	if (simDay.vaccinationRate == 1) {
+	if (simDay.vaccinationRate == simulation.vaccinationMaxRate) {
 		end(simDay);
 	}
 }
