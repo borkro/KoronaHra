@@ -113,7 +113,7 @@ class CovidSimulation {
 
 		let hospitalizedToday = Math.round(this.getDayInPast(this.incubationDays).infectedToday * this.hospitalizationRateSampler());
 		let hospitalized = yesterday.hospitalized + hospitalizedToday
-								- this.getDayInPast(this.hospitalizationDays).hospitalizedToday;
+			- this.getDayInPast(this.hospitalizationDays).hospitalizedToday;
 
 		let vaccinationRate = yesterday.vaccinationRate;
 		if (todayDate >= this.vaccinationStartDate) {
