@@ -173,7 +173,7 @@ function setupCharts() {
 	createChart("chart-1-4", 30, datasets14, autoDecimalLeftAxis);
 
 	var datasets24 = [{
-		label: 'nově nakažených – 7 denní průměr [tis]',
+		label: 'nově nakažených – 7denní průměr [tis]',
 		dataset: x => x.detectedInfections7DayAvg / 1000,
 	}];
 	createChart("chart-2-4", 30, datasets24, autoDecimalLeftAxis);
