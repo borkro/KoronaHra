@@ -46,7 +46,7 @@ function displayData(simDay) {
 	document.getElementById("deadTotal").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deadTotal), 0);
 	document.getElementById("deathsToday").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deathsToday), 0);
 	document.getElementById("mortality").innerHTML = formatWithThousandsSeparator(simDay.mortality * 100, 2);
-	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal / 1e3, 1);
+	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal / 1e9, 1);
 
 	// End of game
 	if (simDay.vaccinationRate == simulation.vaccinationMaxRate) {
@@ -243,7 +243,7 @@ function end(endDay) {
 	document.getElementById("vaccinationRateEndOfGame").innerHTML = `${formatWithThousandsSeparator(100 * endDay.vaccinationRate, 0)}%`;
 	document.getElementById("deadTotalEndOfGame").innerHTML = formatWithThousandsSeparator(Math.round(endDay.deadTotal), 0);
 	document.getElementById("mortalityEndOfGame").innerHTML = `${formatWithThousandsSeparator(endDay.mortality * 100, 2)}%`;
-	document.getElementById("costTotalEndOfGame").innerHTML = formatWithThousandsSeparator(endDay.costTotal / 1e3, 1);
+	document.getElementById("costTotalEndOfGame").innerHTML = formatWithThousandsSeparator(endDay.costTotal / 1e9, 1) + " mld. Kč";
 	playBool = !playBool;
 	endOfGame(true);
 }
