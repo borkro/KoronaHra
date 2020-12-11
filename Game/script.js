@@ -1,7 +1,7 @@
 const DISPLAY_N_DAYS = 150;
 const playSpeed = 350; // ms
 
-const SMALLER_CHART_FONT_SIZE = 9;
+const SMALLER_CHART_FONT_SIZE = 10;
 const BIGGER_CHART_FONT_SIZE = 12;
 const minSizeOfData = 150;
 
@@ -66,7 +66,6 @@ function createChart(canvasId, maxDays, datasets, yAxes, fontSize = SMALLER_CHAR
 
 	let datasetDefault = {
 		data: [],
-		borderWidth: 1,
 		pointRadius: 0,
 		lineTension: 0.0,
 	};
@@ -84,6 +83,9 @@ function createChart(canvasId, maxDays, datasets, yAxes, fontSize = SMALLER_CHAR
 		delete d.dataset;
 		if (!d["borderColor"]) {
 			d["borderColor"] = colorDefault[i];
+		}
+		if (!d["borderWidth"]) {
+			d["borderWidth"] = 1;
 		}
 		chartDatasets.push(d);
 	}
@@ -121,7 +123,7 @@ function createChart(canvasId, maxDays, datasets, yAxes, fontSize = SMALLER_CHAR
 					ticks: {
 						fontSize: fontSize,
 						autoskip: true,
-						/* maxRotation: 0 */
+						maxRotation: 20
 					}
 				}]
 			},
@@ -158,35 +160,28 @@ function setupCharts() {
 	{ id: 'right', ticks: autoDecimalTicks, position: 'right' }];
 
 	var datasets11 = [{
-		label: 'nově nakažených [tis]',
+		label: 'nově nakažení [tis]',
 		dataset: x => x.detectedInfectionsToday / 1000,
 		borderWidth: 2,
-		pointRadius: 0,
-		yAxisID: 'left',
-	}, {
-		label: 'nových mrtvých [tis]',
-		dataset: x => x.deathsToday / 1000,
-		borderWidth: 2,
-		pointRadius: 0,
-		yAxisID: 'right',
 	}];
-	createChart("chart-1-1", DISPLAY_N_DAYS, datasets11, autoDecimalLeftRightAxes, fontSize = BIGGER_CHART_FONT_SIZE);
+	createChart("chart-1-1", DISPLAY_N_DAYS, datasets11, autoDecimalLeftAxis, fontSize = BIGGER_CHART_FONT_SIZE);
 
 	var datasets14 = [{
-		label: 'nově nakažených (poslední měsíc) [tis]',
+		label: 'nově nakažených za poslední měsíc [tis]',
 		dataset: x => x.detectedInfectionsToday / 1000,
 	}];
 	createChart("chart-1-4", 30, datasets14, autoDecimalLeftAxis);
 
 	var datasets24 = [{
-		label: 'nově nakažených 7 denní průměr [tis]',
+		label: 'nově nakažených – 7 denní průměr [tis]',
 		dataset: x => x.detectedInfections7DayAvg / 1000,
 	}];
 	createChart("chart-2-4", 30, datasets24, autoDecimalLeftAxis);
 
 	var datasets34 = [{
-		label: 'smrtnost [%]',
+		label: 'aktuální smrtnost [%]',
 		dataset: x => x.mortality * 100,
+		borderColor: 'rgba(0, 0, 0, .7)',
 	}];
 	createChart("chart-3-4", DISPLAY_N_DAYS, datasets34, simpleLeftAxis);
 
@@ -204,17 +199,20 @@ function setupCharts() {
 	createChart("chart-4-2", DISPLAY_N_DAYS, datasets42, autoDecimalLeftAxis);
 
 	var datasets43 = [{
-		label: 'celkem mrtvých [tis]',
-		dataset: x => x.deadTotal / 1000,
+		label: 'nová úmrtí',
+		dataset: x => x.deathsToday,
+		borderColor: 'rgba( 0, 0, 0, .7)',
 	}];
-	createChart("chart-4-3", DISPLAY_N_DAYS, datasets43, autoDecimalLeftAxis);
+	createChart("chart-4-3", DISPLAY_N_DAYS, datasets43, simpleLeftAxis);
 
 	var datasets44 = [{
-		label: 'kapacita nemocnic [%]',
+		label: 'obsazeno lůžek [%]',
 		dataset: x => x.hospitalizationCapacity * 100,
+		borderColor: 'rgba( 255, 0, 0, .7)'
 	}, {
-		label: '100%',
+		label: '100 %',
 		dataset: x => 100,
+		borderColor: 'rgba( 0, 255, 0, .7)',
 	}];
 	createChart("chart-4-4", DISPLAY_N_DAYS, datasets44, simpleLeftAxis);
 }

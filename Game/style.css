@@ -118,7 +118,7 @@ a:hover {
 }
 
 tbody {
-	border: 1px solid black;
+	border: 1px solid var(--black);
 }
 
 /* END OF GAME + INSTRUCTIONS */
