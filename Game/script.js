@@ -67,7 +67,7 @@ function createChart(canvasId, maxDays, datasets, yAxes, fontSize = SMALLER_CHAR
 	let datasetDefault = {
 		data: [],
 		borderWidth: 1,
-		pointRadius: 2,
+		pointRadius: 0,
 		lineTension: 0.0,
 	};
 	let colorDefault = [
@@ -161,13 +161,13 @@ function setupCharts() {
 		label: 'nově nakažených [tis]',
 		dataset: x => x.detectedInfectionsToday / 1000,
 		borderWidth: 2,
-		pointRadius: 4,
+		pointRadius: 0,
 		yAxisID: 'left',
 	}, {
 		label: 'nových mrtvých [tis]',
 		dataset: x => x.deathsToday / 1000,
 		borderWidth: 2,
-		pointRadius: 4,
+		pointRadius: 0,
 		yAxisID: 'right',
 	}];
 	createChart("chart-1-1", DISPLAY_N_DAYS, datasets11, autoDecimalLeftRightAxes, fontSize = BIGGER_CHART_FONT_SIZE);
