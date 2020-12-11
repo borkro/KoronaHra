@@ -206,7 +206,7 @@ function setupCharts() {
 	createChart("chart-4-3", DISPLAY_N_DAYS, datasets43, simpleLeftAxis);
 
 	var datasets44 = [{
-		label: 'obsazeno lůžek [%]',
+		label: 'potřeba lůžek [%]',
 		dataset: x => x.hospitalizationCapacity * 100,
 		borderColor: 'rgba( 255, 0, 0, .7)'
 	}, {
