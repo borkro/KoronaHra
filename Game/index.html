@@ -11,10 +11,27 @@
 
 <body>
 
-	<p id="upozorneni">Tato jednoduchá hra není simulací skutečné epidemie, slouží jen pro obecnou představu vývoje
-		epidemie. Oficiální informace týkající se epidemie
-		COVID-19 v ČR najdete na <a href="https://onemocneni-aktualne.mzcr.cz/covid-19">onemocneni-aktualne.mzcr.cz</a>.
-		<button id="upozorneniBtn" onclick="hideUpozorneni()">OK</button></p>
+	<!-- END OF GAME -->
+	<div id="instructions">
+		<div id="instructionsTable">
+			<i class="fas fa-times" id="close" onclick="displayInstructions(false)"></i>
+			<h3>Návod</h3>
+			<p id="upozorneni">Tato jednoduchá hra není simulací skutečné epidemie, slouží jen pro obecnou představu
+				vývoje
+				epidemie. Oficiální informace týkající se epidemie
+				COVID-19 v ČR najdete na <a
+					href="https://onemocneni-aktualne.mzcr.cz/covid-19">onemocneni-aktualne.mzcr.cz</a>.
+			</p>
+			<p id="navod">Hru spustíte tlačítkem PLAY v pravém dolním rohu. Hrajete s pozici vlády. Před začátkem
+				hry (ale i během) můžete upravit jednotlivé levely opatření PES (levý dolní roh). Během hry přepínáte
+				levely
+				PES. Hru můžete kdykoliv pozastavit a znovu spustit.<br><br>
+				Hra končí vakcinací a rozřešením zbývájících případů.<br><br>
+				Nezapomeňte, že stejně jako vláda dostáváte data zpožděně od reality. Musíte se rozhodnout, které údaje
+				jsou důležité a vypovídají nejvíce o aktuální situaci.
+			</p>
+		</div>
+	</div>
 
 	<table id="charts" width="100%">
 		<tr>
@@ -108,7 +125,7 @@
 	<!-- END OF GAME -->
 	<div id="endOfGame">
 		<div id="endTable">
-			<i class="fas fa-times" id="close-endOfGame" onclick="displayEndOfGame(false)"></i>
+			<i class="fas fa-times" id="close" onclick="displayEndOfGame(false)"></i>
 			<h3>Konec simulace</h3>
 			<p>Výsledky hry:</p>
 			<table>

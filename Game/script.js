@@ -54,7 +54,7 @@ function displayData(simDay) {
 	}
 }
 
-function createChart(canvasId, maxDays, datasets, yAxes, fontSize=SMALLER_CHART_FONT_SIZE) {
+function createChart(canvasId, maxDays, datasets, yAxes, fontSize = SMALLER_CHART_FONT_SIZE) {
 	let canvas = document.getElementById(canvasId);
 	let canvasCtx = canvas.getContext("2d");
 
@@ -166,7 +166,7 @@ function initialize() {
 		pointRadius: 4,
 		yAxisID: 'right',
 	}];
-	createChart("chart-1-1", DISPLAY_N_DAYS, datasets11, autoDecimalLeftRightAxes, fontSize=BIGGER_CHART_FONT_SIZE);
+	createChart("chart-1-1", DISPLAY_N_DAYS, datasets11, autoDecimalLeftRightAxes, fontSize = BIGGER_CHART_FONT_SIZE);
 
 	var datasets14 = [{
 		label: 'nově nakažených (poslední měsíc) [tis]',
@@ -233,11 +233,6 @@ function play() {
 	setTimeout(play, playSpeed);
 }
 
-
-function hideUpozorneni() {
-	document.getElementById("upozorneni").style.display = "none";
-}
-
 function endSimulation(endDay) {
 	document.getElementById("datumEndOfGame").innerHTML = endDay.date;
 	document.getElementById("vaccinationRateEndOfGame").innerHTML = `${formatWithThousandsSeparator(100 * endDay.vaccinationRate, 0)}%`;
@@ -250,4 +245,8 @@ function endSimulation(endDay) {
 
 function displayEndOfGame(visible) {
 	document.getElementById("endOfGame").style.visibility = visible ? "visible" : "hidden";
+}
+
+function displayInstructions(visible) {
+	document.getElementById("instructions").style.visibility = visible ? "visible" : "hidden";
 }
