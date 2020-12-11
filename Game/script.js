@@ -243,6 +243,15 @@ function endSimulation(endDay) {
 	displayEndOfGame(true);
 }
 
+function restartSimulation() {
+	dataDisplays = [];
+	charts = [];
+	playBool = false;
+	simulation = null;
+	displayEndOfGame(false);
+	initialize();
+}
+
 function displayEndOfGame(visible) {
 	document.getElementById("endOfGame").style.visibility = visible ? "visible" : "hidden";
 }
