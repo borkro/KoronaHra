@@ -36,6 +36,14 @@ a:hover {
 	width: 25%;
 }
 
+#btn {
+	float: right;
+	margin: auto;
+	text-align: center;
+	vertical-align: middle;
+	margin-top: 15px;
+}
+
 #play {
 	border-radius: 50%;
 	color: var(--white);
