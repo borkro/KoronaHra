@@ -261,6 +261,7 @@ function restartSimulation() {
 	setupSimulation();
 	displayEndOfGame(false);
 	randomizeMitigations();
+
 	initialize();
 	document.getElementById("pes-0").checked = true;
 	pesLevelOnChange("pes-0");
