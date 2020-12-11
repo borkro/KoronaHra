@@ -45,7 +45,7 @@ function displayData(simDay) {
 	document.getElementById("vaccinationRate").innerHTML = formatWithThousandsSeparator(100 * simDay.vaccinationRate, 0);
 	document.getElementById("deadTotal").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deadTotal), 0);
 	document.getElementById("deathsToday").innerHTML = formatWithThousandsSeparator(Math.round(simDay.deathsToday), 0);
-	document.getElementById("mortality").innerHTML = formatWithThousandsSeparator(simDay.mortality * 100, 2);
+	document.getElementById("mortality").innerHTML = simDay.mortality ? formatWithThousandsSeparator(simDay.mortality * 100, 2) : 0;
 	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal / 1e9, 1);
 
 	// End of game
