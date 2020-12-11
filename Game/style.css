@@ -14,7 +14,7 @@
 
 body {
 	margin: auto;
-	max-width: 1200px;
+	max-width: 1400px;
 	font-family: var(--font);
 	font-weight: 400;
 	line-height: 1.5em;
@@ -61,21 +61,8 @@ a:hover {
 	padding-right: .7em;
 }
 
-#chart-row-1,
-#chart-row-2 {
-	height: 100%;
-	width: 100%;
-}
-
-#chart-1-1-container {
-	width: 100%;
-}
-
-#chart-2-1-container,
-#chart-2-2-container,
-#chart-2-3-container {
-	width: 33.3%;
-	float: left;
+.td-small-chart {
+	width: 25%;
 }
 
 #btn {

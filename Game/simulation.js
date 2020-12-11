@@ -156,6 +156,10 @@ class CovidSimulation {
 		let detectedInfectionsToday = this.getDayInPast(this.incubationDays + 1).infectedToday;
 		let detectedInfectionsTotal = ((lastStat != null) ? lastStat.detectedInfectionsTotal : 0)
 			+ detectedInfectionsToday;
+		let detectedInfections7DayAvg = 0;
+		for (let i = 1; i <= 7; i++) {
+			detectedInfections7DayAvg += this.getDayInPast(i + this.incubationDays).infectedToday / 7;
+		}
 
 		let costTotal = ((lastStat != null) ? lastStat.costTotal : 0) + today.costToday;
 
@@ -165,11 +169,12 @@ class CovidSimulation {
 			deathsToday: today.deathsToday,
 			detectedInfectionsToday: detectedInfectionsToday,
 			detectedInfectionsTotal: detectedInfectionsTotal,
+			detectedInfections7DayAvg: detectedInfections7DayAvg,
 			detectedActiveInfectionsTotal: today.infected - undetectedInfections,
-			mortalityPct: 100. * today.dead / detectedInfectionsTotal,
+			mortality: today.dead / detectedInfectionsTotal,
 			costTotal: costTotal,
 			vaccinationRate: today.vaccinationRate,
-			hospitalizationCapacityPct: 100. * (this.hospitalsBaselineUtilization + today.hospitalized / this.hospitalsOverwhelmedThreshold),
+			hospitalizationCapacity: this.hospitalsBaselineUtilization + today.hospitalized / this.hospitalsOverwhelmedThreshold,
 		};
 
 		this.simDayStats.push(stats);

@@ -53,6 +53,27 @@ function formatWithThousandsSeparator(value, dec) {
 	return ret;
 }
 
+// Copy of dictionary with default values
+function copyDictWithDefault(dict, defaults) {
+	// Hacky way to do clone
+	let ret = JSON.parse(JSON.stringify(defaults));
+
+	for (var key in dict) {
+		if (key in ret
+			&& key in dict
+			&& JSON.stringify(ret[key])[0] == '{'
+			&& JSON.stringify(dict[key])[0] == '{')
+		{
+			ret[key] = copyDictWithDefault(dict[key], ret[key]);
+		}
+		else {
+			ret[key] = dict[key];
+		}
+	}
+
+	return ret;
+}
+
 // Normal distribution according to https://stackoverflow.com/a/36481059
 function randn() {
 	var u = 0, v = 0;

@@ -16,23 +16,40 @@
 		COVID-19 v ČR najdete na <a href="https://onemocneni-aktualne.mzcr.cz/covid-19">onemocneni-aktualne.mzcr.cz</a>.
 		<button id="upozorneniBtn" onclick="hideUpozorneni()">OK</button></p>
 
-	<div id="chart-row-1">
-		<div id="chart-1-1-container">
-			<canvas id="chart-1-1" height="100%"></canvas>
-		</div>
-	</div>
-	<div id="chart-row-2">
-		<div id="chart-2-1-container">
-			<canvas id="chart-2-1" height="200%"></canvas>
-		</div>
-		<div id="chart-2-2-container">
-			<canvas id="chart-2-2" height="200%"></canvas>
-		</div>
-		<div id="chart-2-3-container">
-			<canvas id="chart-2-3" height="200%"></canvas>
-		</div>
-	</div>
-
+	<table id="charts" width="100%">
+		<tr>
+			<td rowspan="3" colspan="3">
+				<canvas id="chart-1-1"></canvas>
+			</td>
+			<td class="td-small-chart">
+				<canvas id="chart-1-4"></canvas>
+			</td>
+		</tr>
+		<tr>
+			<td class="td-small-chart">
+				<canvas id="chart-2-4"></canvas>
+			</td>
+		</tr>
+		<tr>
+			<td class="td-small-chart">
+				<canvas id="chart-3-4"></canvas>
+			</td>
+		</tr>
+		<tr>
+			<td class="td-small-chart">
+				<canvas id="chart-4-1"></canvas>
+			</td>
+			<td class="td-small-chart">
+				<canvas id="chart-4-2"></canvas>
+			</td>
+			<td class="td-small-chart">
+				<canvas id="chart-4-3"></canvas>
+			</td>
+			<td class="td-small-chart">
+				<canvas id="chart-4-4"></canvas>
+			</td>
+		</tr>
+	</table>
 
 	<div id="playground">
 		<table id="mitigation">
