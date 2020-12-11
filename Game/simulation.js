@@ -12,6 +12,7 @@ class CovidSimulation {
 		this.vaccinationStartDate = '2021-03-01';
 		this.vaccinationPerDay = 0.01;
 		this.vaccinationMaxRate = 0.75;
+		this.endDate = '2021-07-01';
 
 		// All covid parameters counted from the infection day
 		this.incubationDays = 5; // Days until infection is detected

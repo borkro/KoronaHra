@@ -49,8 +49,8 @@ function displayData(simDay) {
 	document.getElementById("costTotal").innerHTML = formatWithThousandsSeparator(simDay.costTotal / 1e9, 1);
 
 	// End of game
-	if (simDay.vaccinationRate == simulation.vaccinationMaxRate) {
-		end(simDay);
+	if (simDay.date >= simulation.endDate) {
+		endSimulation(simDay);
 	}
 }
 
@@ -238,16 +238,16 @@ function hideUpozorneni() {
 	document.getElementById("upozorneni").style.display = "none";
 }
 
-function end(endDay) {
+function endSimulation(endDay) {
 	document.getElementById("datumEndOfGame").innerHTML = endDay.date;
 	document.getElementById("vaccinationRateEndOfGame").innerHTML = `${formatWithThousandsSeparator(100 * endDay.vaccinationRate, 0)}%`;
 	document.getElementById("deadTotalEndOfGame").innerHTML = formatWithThousandsSeparator(Math.round(endDay.deadTotal), 0);
 	document.getElementById("mortalityEndOfGame").innerHTML = `${formatWithThousandsSeparator(endDay.mortality * 100, 2)}%`;
 	document.getElementById("costTotalEndOfGame").innerHTML = formatWithThousandsSeparator(endDay.costTotal / 1e9, 1) + " mld. Kč";
 	playBool = !playBool;
-	endOfGame(true);
+	displayEndOfGame(true);
 }
 
-function endOfGame(bool) {
-	document.getElementById("endOfGame").style.visibility = bool ? "visible" : "hidden";
+function displayEndOfGame(visible) {
+	document.getElementById("endOfGame").style.visibility = visible ? "visible" : "hidden";
 }

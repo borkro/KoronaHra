@@ -163,8 +163,8 @@ tbody {
 }
 
 #endTable {
-	height: 300px;
-	width: 450px;
+	height: 400px;
+	width: 500px;
 	border-radius: 20px;
 	background-color: var(--white);
 	color: var(--black);
