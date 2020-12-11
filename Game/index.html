@@ -16,30 +16,47 @@
 		COVID-19 v ČR najdete na <a href="https://onemocneni-aktualne.mzcr.cz/covid-19">onemocneni-aktualne.mzcr.cz</a>.
 		<button id="upozorneniBtn" onclick="hideUpozorneni()">OK</button></p>
 
-	<div id="chart-row-1">
-		<div id="chart-1-1-container">
-			<canvas id="chart-1-1" height="100%"></canvas>
-		</div>
-	</div>
-	<div id="chart-row-2">
-		<div id="chart-2-1-container">
-			<canvas id="chart-2-1" height="200%"></canvas>
-		</div>
-		<div id="chart-2-2-container">
-			<canvas id="chart-2-2" height="200%"></canvas>
-		</div>
-		<div id="chart-2-3-container">
-			<canvas id="chart-2-3" height="200%"></canvas>
-		</div>
-	</div>
-
+	<table id="charts" width="100%">
+		<tr>
+			<td rowspan="3" colspan="3">
+				<canvas id="chart-1-1"></canvas>
+			</td>
+			<td class="td-small-chart">
+				<canvas id="chart-1-4"></canvas>
+			</td>
+		</tr>
+		<tr>
+			<td class="td-small-chart">
+				<canvas id="chart-2-4"></canvas>
+			</td>
+		</tr>
+		<tr>
+			<td class="td-small-chart">
+				<canvas id="chart-3-4"></canvas>
+			</td>
+		</tr>
+		<tr>
+			<td class="td-small-chart">
+				<canvas id="chart-4-1"></canvas>
+			</td>
+			<td class="td-small-chart">
+				<canvas id="chart-4-2"></canvas>
+			</td>
+			<td class="td-small-chart">
+				<canvas id="chart-4-3"></canvas>
+			</td>
+			<td class="td-small-chart">
+				<canvas id="chart-4-4"></canvas>
+			</td>
+		</tr>
+	</table>
 
 	<div id="playground">
 		<table id="mitigation">
 			<tr id="pes-0-row" class="pes-row-selected">
 				<td width="12%">
 					<input type="radio" name="pes" id="pes-0" onchange="pesLevelOnChange(this.id)" checked="checked">
-					<label for="pes-0" id="pes-1-label">PES-0</label>
+					<label for="pes-0" id="pes-0-label">PES-0</label>
 				</td>
 				<td>
 					Otevřít vše
@@ -91,8 +108,9 @@
 	<!-- END OF GAME -->
 	<div id="endOfGame">
 		<div id="endTable">
-			<i class="fas fa-times" id="close-endOfGame" onclick="endOfGame(false)"></i>
-			<h3>Výsledky hry</h3>
+			<i class="fas fa-times" id="close-endOfGame" onclick="displayEndOfGame(false)"></i>
+			<h3>Konec simulace</h3>
+			<p>Výsledky hry:</p>
 			<table>
 				<tbody>
 					<tr>
