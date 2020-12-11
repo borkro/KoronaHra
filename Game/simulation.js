@@ -93,26 +93,26 @@ class CovidSimulation {
 		infectious /= (this.infectiousTo - this.infectiousFrom + 1);
 		// Simplifying assumption that only uninfected people got vaccinated
 		let suspectibleToday = Math.max(0, yesterday.suspectible - population * yesterday.vaccinationRate);
-		let infectedToday = Math.round(infectious * this.RNoiseMultSampler() * R * suspectibleToday / population);
+		let infectedToday = infectious * this.RNoiseMultSampler() * R * suspectibleToday / population;
 		infected += infectedToday;
 		suspectible -= infectedToday;
 
 		let recoveryFromDay = this.getDayInPast(this.recoveryDays);
-		let recoveredToday = Math.round(recoveryFromDay.infectedToday * (1 - recoveryFromDay.mortality));
+		let recoveredToday = recoveryFromDay.infectedToday * (1 - recoveryFromDay.mortality);
 		recovered += recoveredToday;
 		infected -= recoveredToday;
 
 		let deathsFromDay = this.getDayInPast(this.timeToDeathDays);
-		let deathsToday = Math.round(deathsFromDay.infectedToday * deathsFromDay.mortality);
+		let deathsToday = deathsFromDay.infectedToday * deathsFromDay.mortality;
 		dead += deathsToday;
 		infected -= deathsToday;
 
 		let endedImmunityFromDay = this.getDayInPast(this.immunityDays);
-		let endedImmunityToday = Math.round(endedImmunityFromDay.infectedToday * (1 - endedImmunityFromDay.mortality));
+		let endedImmunityToday = endedImmunityFromDay.infectedToday * (1 - endedImmunityFromDay.mortality);
 		suspectible += endedImmunityToday;
 		recovered -= endedImmunityToday;
 
-		let hospitalizedToday = Math.round(this.getDayInPast(this.incubationDays).infectedToday * this.hospitalizationRateSampler());
+		let hospitalizedToday = this.getDayInPast(this.incubationDays).infectedToday * this.hospitalizationRateSampler();
 		let hospitalized = yesterday.hospitalized + hospitalizedToday
 			- this.getDayInPast(this.hospitalizationDays).hospitalizedToday;
 
@@ -166,12 +166,12 @@ class CovidSimulation {
 
 		let stats = {
 			date: today.date,
-			deadTotal: today.dead,
-			deathsToday: today.deathsToday,
-			detectedInfectionsToday: detectedInfectionsToday,
-			detectedInfectionsTotal: detectedInfectionsTotal,
+			deadTotal: Math.round(today.dead),
+			deathsToday: Math.round(today.deathsToday),
+			detectedInfectionsToday: Math.round(detectedInfectionsToday),
+			detectedInfectionsTotal: Math.round(detectedInfectionsTotal),
 			detectedInfections7DayAvg: detectedInfections7DayAvg,
-			detectedActiveInfectionsTotal: today.infected - undetectedInfections,
+			detectedActiveInfectionsTotal: Math.round(today.infected - undetectedInfections),
 			mortality: today.dead / detectedInfectionsTotal,
 			costTotal: costTotal,
 			vaccinationRate: today.vaccinationRate,

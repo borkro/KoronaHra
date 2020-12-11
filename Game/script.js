@@ -54,6 +54,12 @@ function displayData(simDay) {
 	}
 }
 
+function resetChartData() {
+	dataDisplays.forEach(display => display.chartDataset.data = []);
+	charts.forEach(chart => chart.data.labels = []);
+	charts.forEach(chart => chart.update());
+}
+
 function createChart(canvasId, maxDays, datasets, yAxes, fontSize = SMALLER_CHART_FONT_SIZE) {
 	let canvas = document.getElementById(canvasId);
 	let canvasCtx = canvas.getContext("2d");
@@ -136,9 +142,7 @@ function createChart(canvasId, maxDays, datasets, yAxes, fontSize = SMALLER_CHAR
 	charts.push(chart);
 }
 
-function initialize() {
-	simulation = new CovidSimulation("2020-03-01");
-
+function setupCharts() {
 	Chart.defaults.global.elements.point.backgroundColor = 'rgba(255, 99, 132, 0.3)';
 	Chart.defaults.global.elements.point.borderColor = 'rgba(255, 99, 132, .7)';
 	Chart.defaults.global.elements.point.borderWidth = 1;
@@ -213,8 +217,16 @@ function initialize() {
 		dataset: x => 100,
 	}];
 	createChart("chart-4-4", DISPLAY_N_DAYS, datasets44, simpleLeftAxis);
+}
 
+function setupSimulation() {
+	simulation = new CovidSimulation("2020-03-01");
 	simulation.simDayStats.forEach(day => displayData(day));
+}
+
+function initialize() {
+	setupCharts();
+	setupSimulation();
 }
 initialize();
 
@@ -244,15 +256,15 @@ function endSimulation(endDay) {
 }
 
 function restartSimulation() {
-	displayEndOfGame(false);
-	dataDisplays.splice(0, dataDisplays.length);
 	playBool = false;
-	simulation = null;
-	charts.forEach(chart => {
-		chart.reset();
-	});
-	charts = [];
+	resetChartData();
+	setupSimulation();
+	displayEndOfGame(false);
+	randomizeMitigations();
+
 	initialize();
+	document.getElementById("pes-0").checked = true;
+	pesLevelOnChange("pes-0");
 }
 
 function displayEndOfGame(visible) {
