@@ -244,11 +244,14 @@ function endSimulation(endDay) {
 }
 
 function restartSimulation() {
-	dataDisplays = [];
-	charts = [];
+	displayEndOfGame(false);
+	dataDisplays.splice(0, dataDisplays.length);
 	playBool = false;
 	simulation = null;
-	displayEndOfGame(false);
+	charts.forEach(chart => {
+		chart.reset();
+	});
+	charts = [];
 	initialize();
 }
 
